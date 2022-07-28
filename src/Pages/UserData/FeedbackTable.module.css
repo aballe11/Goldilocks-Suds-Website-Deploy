@@ -1,0 +1,48 @@
+.div {
+      margin-top: -35px;
+}
+
+.lowerDiv {
+      display: block;
+      position: relative;
+      margin-bottom: 2rem;
+      clear: both;
+      float: left;
+      margin-left: -150px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      height: 600px;
+      width: 1036px;
+}
+
+.container{
+      margin: 5px;
+}
+
+.h1{
+      font-size: 2.5rem;
+      color: #2c292b;
+      margin: 0px;
+}
+
+.h2{
+      font-size: 1.25rem;
+      color: #2c292b;
+      margin: 0px;
+}
+
+.btn {
+      padding: 0.1rem 0.75em;
+      cursor: pointer;
+      border-radius: 5px;
+      background-color: #0b3bac;
+      color: white;
+      border: 1px solid #0b3bac;
+      margin: 0 0rem;
+
+    }
+    
+.btn:hover {
+      background-color: #0f4bd5;
+      border-color: #0f4bd5;
+    }
