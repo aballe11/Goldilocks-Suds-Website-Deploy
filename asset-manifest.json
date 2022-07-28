@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/Goldilocks-Suds-Website-Deploy/static/css/main.66bf2f76.css",
+    "main.js": "/Goldilocks-Suds-Website-Deploy/static/js/main.b74a46d3.js",
+    "static/media/Procter_&_Gamble_logo.svg": "/Goldilocks-Suds-Website-Deploy/static/media/Procter_&_Gamble_logo.818457af2471a3ebbe1f443176b31ffc.svg",
+    "index.html": "/Goldilocks-Suds-Website-Deploy/index.html",
+    "main.66bf2f76.css.map": "/Goldilocks-Suds-Website-Deploy/static/css/main.66bf2f76.css.map",
+    "main.b74a46d3.js.map": "/Goldilocks-Suds-Website-Deploy/static/js/main.b74a46d3.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.66bf2f76.css",
+    "static/js/main.b74a46d3.js"
+  ]
+}
