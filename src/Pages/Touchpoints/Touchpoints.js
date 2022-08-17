@@ -1,16 +1,23 @@
-import { Link } from 'react-router-dom';
 import { db } from '../Firebase';
 import { set, ref } from 'firebase/database';
-import classes from './Touchpoints.module.css';
-import { uid } from 'uid'
+import { uid } from 'uid';
 
 function Touchpoints() {
 const writeToDatabase = () => {
         //set(ref(db, 'Feedback/Chest_Dawn/10'), more);
 
-        //WRITING TOUCHPOINT FEEDBACK INFORMATION
+
+
+        
         const uuid = uid();
-        set(ref(db, 'Feedback/1904715a11a'), {
+        set(ref(db, `TouchpointTemplates/${uuid}`), {
+            uuid: {
+
+            }
+        });
+
+        //WRITING TOUCHPOINT FEEDBACK INFORMATION
+        /*set(ref(db, 'Feedback/1904715a11a'), {
             'Tp1':{
                     Total: 0, Type: 'R10', 'Toggle_1': 0, 'Toggle_2': 0, 'Toggle_3': 0,
                     'Toggle_4': 0, 'Toggle_5': 0, 'Toggle_6': 0, 'Toggle_7': 0, 'Toggle_8': 0,
@@ -65,7 +72,7 @@ const writeToDatabase = () => {
             Status: 'Active',
             TotalResponses: 0,
             Count: 9,
-        });
+        });*/
 
         //WRITING VIDEO INFORMATION
         /*const uuid = uid();
@@ -145,19 +152,7 @@ const writeToDatabase = () => {
     }
 
     return (
-        <div>
-            <br></br><br></br><br></br><br></br><br></br>
-            <div>
-                <Link to='/touchpoints/touchpoint-template-library'>
-                    <button className={classes.btn}>Touchpoint Library</button>
-                </Link>
-            </div>
-            <div>
-                <Link to='/touchpoints/create-new'>
-                    <button className={classes.btn} /*onClick={writeToDatabase}*/>Create Touchpoint</button>
-                </Link>
-            </div>
-        </div>
+        {}
     );
     
 

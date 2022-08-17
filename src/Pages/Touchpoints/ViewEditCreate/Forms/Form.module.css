@@ -12,6 +12,10 @@
     margin-bottom: 0.5rem;
 }
 
+.label {
+    color: red;
+}
+
 .control input,
 .control textarea{
     display: block;
@@ -23,10 +27,14 @@
 
 }
 
+
+
 .actions {
     margin-top: 1rem;
     text-align: right;
 }
+
+
 
 .actions button {
     font: inherit;

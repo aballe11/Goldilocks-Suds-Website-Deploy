@@ -227,8 +227,9 @@ function FeedbackTable(props){
 
     return (
         <div className= {classes.div}>
-            <br></br><br></br>
-            <h1 className= {classes.h1}> Videos </h1>
+            <br></br>
+            {/*<br></br>*/}
+            <h1 className= {classes.h1}> User Data - Videos </h1>
             <h2 className= {classes.h2}> {insideVideoTitle}</h2>
             <h2 className= {classes.h2}> {touchpointTotal}</h2>
             <ul className = {classes.list}>

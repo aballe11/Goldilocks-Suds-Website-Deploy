@@ -28,7 +28,7 @@ function TouchpointList(props){
             }
             
             templateTableEnabledArray.push({
-                  'id': v,
+                  'id': ID,
                   'Alias': Alias,
                   'Times Used': TimesUsed,
                   'Question Prompt': Prompt,

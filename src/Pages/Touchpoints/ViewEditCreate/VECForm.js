@@ -9,7 +9,7 @@ import MCIForm from './Forms/MCI-Form';
 import MCForm from './Forms/MC-Form';
 import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
-import {set, ref} from 'firebase/database';
+import {set, ref, remove} from 'firebase/database';
 import _ from 'lodash';
 
 
@@ -26,24 +26,26 @@ function VECForm(props){
     }
 
     function PushFirebaseTP(touchpointValues){
-        var id = touchpointValues.Alias.split(' ');
-        id = _.join(id, '-')
-        //console.log(id);
-        set(ref(db, 'TouchpointTemplates/' + id ), touchpointValues);
+        console.log(touchpointValues.uid);
+        set(ref(db, 'TouchpointTemplates/' + touchpointValues.uid), touchpointValues);
+    }
+
+    function DeleteFirebaseTP(uid){
+        remove(ref(db, 'TouchpointTemplates/' + uid));
   }
 
     const functionWithSwitch = (parameter) => {
         switch(parameter){
             case "R10":
-                return <R10Form writeToDatabase = {PushFirebaseTP}/>;
+                return <R10Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
             case "R5":
-                return <R5Form writeToDatabase = {PushFirebaseTP}/>;
+                return <R5Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
             case "FF":
-                return <FFForm writeToDatabase = {PushFirebaseTP}/>;
+                return <FFForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
             case "MC":
-                return <MCForm writeToDatabase = {PushFirebaseTP}/>;
+                return <MCForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
             case "MCI":
-                return <MCIForm writeToDatabase = {PushFirebaseTP}/>;
+                return <MCIForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
             default:
                 break;
         }

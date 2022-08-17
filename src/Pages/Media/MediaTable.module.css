@@ -1,0 +1,28 @@
+.div {
+      margin-top: -35px;
+}
+
+.lowerDiv {
+      display: block;
+      position: relative;
+      margin-bottom: 2rem;
+      clear: both;
+      float: left;
+      margin-left: -150px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+      height: 600px;
+      width: 1036px;
+}
+
+.h1{
+      font-size: 2.25rem;
+      color: #2c292b;
+      margin: 0px;
+}
+
+.h2{
+      font-size: 1.25rem;
+      color: #2c292b;
+      margin: 0px;
+}

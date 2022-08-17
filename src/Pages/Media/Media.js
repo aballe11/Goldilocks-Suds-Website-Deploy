@@ -1,4 +1,5 @@
 import React from 'react';
+import MediaLibrary from './MediaLibrary';
 
 function Media(){
 
@@ -8,8 +9,7 @@ function Media(){
 
     return (
         <div>
-            {/*<h1>Date is: {date}</h1>*/}
-            <h1>Under construction...</h1>
+            <MediaLibrary/> 
         </div>
     );
 }

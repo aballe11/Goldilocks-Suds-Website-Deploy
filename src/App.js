@@ -9,7 +9,6 @@ import ViewTouchpoint from './Pages/Touchpoints/ViewEditCreate/ViewTouchpoint';
 
 import TouchpointLibrary from './Pages/Touchpoints/TPLibrary/TouchpointLibrary';
 import ViewEditCreateTemplate from './Pages/Touchpoints/ViewEditCreate/ViewEditCreateTemplate';
-import { arrayOfTemplates } from './Pages/Touchpoints/TPLibrary/TouchpointTable';
 
 function App() {
   return (
@@ -19,13 +18,12 @@ function App() {
           <Route path='/Goldilocks-Suds-Website-Deploy' element={<Home />} />
           
 
-          <Route path='/touchpoints' element={<Touchpoints />} />
-          <Route path='/touchpoints/touchpoint-template-library' element={<TouchpointLibrary />} />
-          <Route path='/touchpoints/touchpoint-template-library/edit-touchpoint' element={<ViewTouchpoint/>} />
-          <Route path='/touchpoints/create-new' element={<ViewEditCreateTemplate />} />
+          <Route path='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library' element={<TouchpointLibrary />} />
+          <Route path='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library/edit-touchpoint' element={<ViewTouchpoint/>} />
+          <Route path='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library/create-new' element={<ViewEditCreateTemplate />} />
 
-          <Route path='/media' element={<Media />} />
-          <Route path='/user-data' element={<UserData />} />
+          <Route path='/Goldilocks-Suds-Website-Deploy/media' element={<Media />} />
+          <Route path='/Goldilocks-Suds-Website-Deploy/user-data' element={<UserData />} />
           
         </Routes>
       </Layout>

@@ -6,31 +6,35 @@ import {Button} from '@mui/material';
 function MainNavigation(){
     return (
         <header className={classes.header}>
-            <img src={logo} className= {classes.imgLogo} alt="logo"></img>
-            <div className={classes.logo}> 
-                Goldilocks Suds Aesthetics Research
-            </div>
+            <Link to='/Goldilocks-Suds-Website-Deploy/'>
+                <img src={logo} className= {classes.imgLogo} alt="logo"></img>
+            </Link>
+            <Link to='/Goldilocks-Suds-Website-Deploy/'>
+                <div className={classes.logo}> 
+                    Goldilocks Suds Aesthetics Research
+                </div>
+            </Link>
             <nav>
                 {
                     //<ul> & <li> are creating an unordered list
                 }
                 <ul>
                     <li>
-                        <Link to='/touchpoints'> 
+                        <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'> 
                             <Button variant="contained" size="medium" sx={{ color: 'info.main', backgroundColor: 'white', '&:hover':{color:'white'}, borderColor: 'info.main', width: '100'}}>
                                     Touchpoints 
                             </Button>
                         </Link>
                     </li>
                     <li>
-                        <Link to='/media'> 
+                        <Link to='/Goldilocks-Suds-Website-Deploy/media'> 
                         <Button variant="contained" size="medium" sx={{ color: 'info.main',  backgroundColor: 'white', '&:hover':{color:'white'}, borderColor: 'info.main' }}>
                                     Media 
                             </Button>
                          </Link>
                     </li>
                     <li>
-                        <Link to='/user-data'> 
+                        <Link to='/Goldilocks-Suds-Website-Deploy/user-data'> 
                             <Button variant="contained" size="medium" sx={{ color: 'info.main', backgroundColor: 'white', '&:hover':{color:'white'},  borderColor: 'info.main' }}>
                                     User Data 
                             </Button>
