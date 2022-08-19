@@ -8,7 +8,7 @@ import { listAll, ref, getDownloadURL } from 'firebase/storage';
 
 function Gallery(){
 
-      const imageListRef = ref(storage, "Touchpoint Template Images/Suds/");
+      const imageListRef = ref(storage, "Touchpoint Template Images/");
       const [imageList, setImageList] = useState([]);
       useEffect(() => {
             listAll(imageListRef).then((response) => {

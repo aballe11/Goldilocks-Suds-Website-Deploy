@@ -71,7 +71,6 @@ function ImageUploader(props){
                               <button  className = {classes.closeModal} onClick = {props.toggle}>Close</button>
                               <br/>
                               <p className = {classes.boldFont}>Name new/exisiting folder or leave blank for general folder.</p>
-                              <label htmlFor='prompt'>Name new/exisiting folder or leave blank for general folder.</label>
                               <TextField id='outlined-basic' variant='outlined' inputRef={folderNameRef} fullWidth />
                               <br/>
                               <br/>

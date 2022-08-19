@@ -106,7 +106,7 @@ function MCIForm(props) {
                 
                 {/*ImageUploader toggle = {toggleImageUploader}/>:null*/}
             </div>
-            <Gallery/>
+            {/*<Gallery/>*/}
 
         </div>
     );
