@@ -10,11 +10,11 @@ function MediaTable(props){
       var arrayOfVideos = props.arrayOfVideos;
       var videoTableEnabledArray = props.videoTableEnabledArray;
       const allVideosColumns: GridColDef [] = [
-            {field: 'Title', headerName: 'Video Title', width: 350, headerAlign: 'center', align: 'center'},
-            {field: 'Upload Date', headerName: 'Upload Date', width: 170, headerAlign: 'center', align: 'center'},
+            {field: 'Title', headerName: 'Title', width: 350, headerAlign: 'center', align: 'center'},
+            {field: 'Upload Date', headerName: 'Upload Date', width: 150, headerAlign: 'center', align: 'center'},
             //{field: 'Description', headerName: 'Description', width: 250, headerAlign: 'center', align: 'center'},
-            {field: 'Length', headerName: 'Length', width: 130, headerAlign: 'center', align: 'center'},
-            {field: 'Touchpoints', headerName: 'Touchpoint #', width: 145, headerAlign: 'center', align: 'center'},
+            {field: 'Length', headerName: 'Length (s)', width: 120, headerAlign: 'center', align: 'center'},
+            {field: 'Touchpoints', headerName: 'Touchpoints (amt)', width: 175, headerAlign: 'center', align: 'center'},
             {field: 'State', headerName: 'State', width: 110, headerAlign: 'center', align: 'center'},
             {field: 'btn', headerName: 'Actions', renderCell: (params) => (
                   <strong>

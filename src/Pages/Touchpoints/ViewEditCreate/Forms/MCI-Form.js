@@ -2,14 +2,17 @@ import { useRef, useState } from 'react';
 import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
-import {storage} from "../../../Firebase"
-import { ref, uploadBytes } from 'firebase/storage';
 import { uid } from 'uid';
+import ImageUploader from './MCI/ImageUploader';
+import Gallery from './MCI/Gallery';
+
+
 
 function MCIForm(props) {
 
     const touchpointAlias = useRef();
     const touchpointPrompt = useRef();
+    var existing = false;
 
     var aliasDefaultValue = '';
     var promptDefaultValue = '';
@@ -19,6 +22,7 @@ function MCIForm(props) {
     if (props.view === true || props.duplicate ===true) {
         aliasDefaultValue = props.arrayOfTemplates.Alias;
         promptDefaultValue = props.arrayOfTemplates.Prompt;
+        existing = true;
     }
     if(props.duplicate === true){
         titleDefaultValue = 'Multiple Choice w/ Images - Duplicate';
@@ -32,8 +36,8 @@ function MCIForm(props) {
     function deleteButtonHandler(){
         if(props.view){
             return (<Link to = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
-                <button onClick = {deleteTemplate}>Delete Template</button>
-            </Link>);
+                        <button onClick = {deleteTemplate}>Delete Template</button>
+                    </Link>);
         }
     }
 
@@ -44,41 +48,26 @@ function MCIForm(props) {
         const enteredPromptQuestion = touchpointPrompt.current.value;
 
         const touchpointValues = {
-            //uid: ((existing) ? props.arrayOfTemplates.uid : uid()),
-            UID: props.arrayOfTemplates.UID,
+            uid: ((existing) ? props.arrayOfTemplates.UID : uid()),
+            //UID: props.arrayOfTemplates.UID,
             Alias: enteredAlias,
             Prompt: enteredPromptQuestion,
             Type: 'MCI',
-            TimesUsed: props.arrayOfTemplates.TimesUsed,
-            //TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
+            //TimesUsed: props.arrayOfTemplates.TimesUsed,
+            TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
         };
         props.writeToDatabase(touchpointValues);
     };
+    
+    const [showImageUploader, setShowImageUploader] = useState(false);
+    function toggleImageUploader(){
+        setShowImageUploader(!showImageUploader);
+    }
 
-    const [images, setImages] = useState([]);
-    
+    function returnModal () {
+        return ( <ImageUploader toggle={toggleImageUploader}/>);
+    }
 
-    const handleChange = (e) => {
-        e.preventDefault();
-        for(let i = 0; i < e.target.files.length; i++){
-            const newImage = e.target.files[i];
-            newImage['id'] = uid();
-            setImages((prevState) => [...prevState, newImage]);
-        }
-    };
-    
-    const handleUpload = (e) => {
-        e.preventDefault();
-        if(images.length === 0) {return alert("No images have been selected.");};
-        const promises = [];
-        images.map((image) => {
-            const imageRef = ref(storage, `Touchpoint Template Images/${image.name}_${uid()}`);
-            const uploadTask = uploadBytes(imageRef, image);
-            promises.push(uploadTask);
-        });
-        Promise.all(promises).then(()=> alert("All images uploaded successfully!")).catch((err) => console.log(err));
-    };
-    
     return (
         <div>
             <h2 className={classes.h2}>{titleDefaultValue}</h2>
@@ -97,20 +86,28 @@ function MCIForm(props) {
                     <label htmlFor='prompt'>Question prompted to user:</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
-
-                <div /*className = {classes.actions}*/>
-                    <input type="file" multiple onChange={handleChange} />
-                    <button onClick = {handleUpload}>Upload Images</button> <br/>
-                </div>         
-
-                <div className={classes.actions}>
-                    <button onClick={SubmitHandler}>Save Template</button>
-                    <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
-                        <button>Go Back</button>
-                    </Link>
-                    {deleteButtonHandler()}
-                </div>
             </form>
+
+            <div>
+                
+            </div>
+
+
+
+            <div className = {classes.actions}>
+                <button onClick={SubmitHandler}>Save Template</button>
+                <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
+                    <button>Go Back</button>
+                </Link>
+                {deleteButtonHandler()}
+                <button onClick = {toggleImageUploader}>Upload Images</button>
+                {showImageUploader &&  returnModal() }
+                
+                
+                {/*ImageUploader toggle = {toggleImageUploader}/>:null*/}
+            </div>
+            <Gallery/>
+
         </div>
     );
 }
