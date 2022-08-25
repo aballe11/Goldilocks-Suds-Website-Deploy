@@ -16,10 +16,10 @@ function TouchpointTable(props){
 
       var templateTableEnabledArray = props.templateTableEnabledArray;
       arrayOfTemplates = props.arrayOfTemplates;
-      console.log('Array Of Templates: ');      
+      /*console.log('Array Of Templates: ');      
       console.log(arrayOfTemplates);
       console.log('Table Enabled Array: ');
-      console.log(templateTableEnabledArray);
+      console.log(templateTableEnabledArray);*/
 
       const allTemplatesColumns: GridColDef [] = [
             {field: 'Alias', headerName: 'Template Alias', width: 240, headerAlign: 'center', align: 'center'},

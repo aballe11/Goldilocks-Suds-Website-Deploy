@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import TextField from '@mui/material/TextField';
 import classes from './Form.module.css';
 import { Link } from 'react-router-dom';
+import {uid} from 'uid';
 
 
 function FFForm(props) {
@@ -42,15 +43,14 @@ function FFForm(props) {
         const enteredPromptQuestion = touchpointPrompt.current.value;
 
         const touchpointValues = {
-            //uid: ((existing) ? props.arrayOfTemplates.uid : uid()),
-            UID: props.arrayOfTemplates.UID,
+            UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID:uid())),
             Alias: enteredAlias,
             Prompt: enteredPromptQuestion,
             Type: 'FF',
-            TimesUsed: props.arrayOfTemplates.TimesUsed,
-            //TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
+            TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
         };
         props.writeToDatabase(touchpointValues);
+        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     }
 
     return (

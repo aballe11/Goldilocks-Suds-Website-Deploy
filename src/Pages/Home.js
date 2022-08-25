@@ -16,7 +16,7 @@ function Home(){
                     </iframe>
                 </div>
                 <br></br>
-                <h2>Please select an option from the menu...</h2>
+                <h2>Select an option from the menu...</h2>
             </div>
             
         );

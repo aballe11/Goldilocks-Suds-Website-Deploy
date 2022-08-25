@@ -1,18 +1,18 @@
 import { useRef, useState } from 'react';
 import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
-import { Link } from 'react-router-dom';
-import { uid } from 'uid';
+import { Link, useHref } from 'react-router-dom';
 import ImageUploader from './MCI/ImageUploader';
+import GalleryDropdown from './MCI/GalleryDropdown';
 import Gallery from './MCI/Gallery';
-
+import {uid} from 'uid';
+import _ from 'lodash';
 
 
 function MCIForm(props) {
-
+    const selectedIDs = [];
     const touchpointAlias = useRef();
     const touchpointPrompt = useRef();
-    var existing = false;
 
     var aliasDefaultValue = '';
     var promptDefaultValue = '';
@@ -22,7 +22,11 @@ function MCIForm(props) {
     if (props.view === true || props.duplicate ===true) {
         aliasDefaultValue = props.arrayOfTemplates.Alias;
         promptDefaultValue = props.arrayOfTemplates.Prompt;
-        existing = true;
+        var x = _.split(props.arrayOfTemplates.ImageIDs, '/');
+        for(let id in x){
+            selectedIDs.push(x[id]);
+        }
+        console.log(selectedIDs);
     }
     if(props.duplicate === true){
         titleDefaultValue = 'Multiple Choice w/ Images - Duplicate';
@@ -40,23 +44,33 @@ function MCIForm(props) {
                     </Link>);
         }
     }
+    
+    
+    function addID(ID){
+        selectedIDs.push(ID);
+    }
+    function removeID(ID){
+        _.remove(selectedIDs, function(n){return n===ID});
+    }
+
 
     function SubmitHandler(event) {
         event.preventDefault();
 
         const enteredAlias = touchpointAlias.current.value;
         const enteredPromptQuestion = touchpointPrompt.current.value;
+        var stringSelectedIDs = _.join(selectedIDs, '/');
 
         const touchpointValues = {
-            uid: ((existing) ? props.arrayOfTemplates.UID : uid()),
-            //UID: props.arrayOfTemplates.UID,
+            UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID : uid())),
             Alias: enteredAlias,
             Prompt: enteredPromptQuestion,
             Type: 'MCI',
-            //TimesUsed: props.arrayOfTemplates.TimesUsed,
-            TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
+            TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
+            ImageIDs: stringSelectedIDs,
         };
         props.writeToDatabase(touchpointValues);
+        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     };
     
     const [showImageUploader, setShowImageUploader] = useState(false);
@@ -67,6 +81,7 @@ function MCIForm(props) {
     function returnModal () {
         return ( <ImageUploader toggle={toggleImageUploader}/>);
     }
+
 
     return (
         <div>
@@ -87,13 +102,6 @@ function MCIForm(props) {
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
             </form>
-
-            <div>
-                
-            </div>
-
-
-
             <div className = {classes.actions}>
                 <button onClick={SubmitHandler}>Save Template</button>
                 <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
@@ -101,13 +109,11 @@ function MCIForm(props) {
                 </Link>
                 {deleteButtonHandler()}
                 <button onClick = {toggleImageUploader}>Upload Images</button>
-                {showImageUploader &&  returnModal() }
-                
-                
-                {/*ImageUploader toggle = {toggleImageUploader}/>:null*/}
+                {showImageUploader?  returnModal():null }
             </div>
-            {/*<Gallery/>*/}
-
+            <div>
+                {(props.view||props.duplicate)? <Gallery chosenFile = {selectedIDs[0]} removeID={removeID} addID={addID} existing={true} selectedIDs={selectedIDs}/>:<GalleryDropdown removeID={removeID} addID={addID}/>}
+            </div>
         </div>
     );
 }

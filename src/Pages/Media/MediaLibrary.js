@@ -5,13 +5,12 @@ import {db} from '../Firebase';
 
 function MediaLibrary(){
       const [isLoading, setIsLoading] = useState(true);
-      const [loadedVideos, setLoadedVideos] = useState({});
+      const [loadedVideos, setLoadedVideos] = useState([]);
 
       useEffect(() => {
-            onValue(ref(db, '/Videos' ), snapshot => {;
-                  setLoadedVideos([]);
+            onValue(ref(db, '/Videos' ), snapshot => {
+                  
                   const data = snapshot.val();
-                  //console.log(data);
                   if(data !== null){
                         setLoadedVideos(data);
                         setIsLoading(false);

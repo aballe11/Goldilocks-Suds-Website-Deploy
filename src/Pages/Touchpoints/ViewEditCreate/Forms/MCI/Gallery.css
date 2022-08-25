@@ -1,0 +1,33 @@
+.gallery{
+      -webkit-column-count: 5;
+      -moz-column-count: 5;
+      column-count: 5;
+      -webkit-column-width: 20%;
+      column-width: 20%;
+      padding: 0 5px;
+}
+
+.gallery .pics{
+      -webkit-transition: all 350ms ease;
+      transition: all 350ms ease;
+      cursor: pointer;
+      margin-bottom: 5px;
+      position: relative;
+}
+
+.gallery .pics:hover {
+      filter:opacity(.6);
+}
+
+.gallery .pics .opaque {
+      filter:opacity(.6);
+}
+.gallery .pics .label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      font-weight: bold;
+      
+}

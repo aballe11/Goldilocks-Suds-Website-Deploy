@@ -2,13 +2,18 @@ import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
 import _ from 'lodash';
 import classes from './MediaTable.module.css';
 import {Button} from '@mui/material';
-import {React} from 'react';
+import {React, useState} from 'react';
 import { Link } from 'react-router-dom';
+import VideoUploader from './VideoUploader';
 
+var selectedVideoID = '';
 function MediaTable(props){
       //1037
+      const [showVideoUploader, setShowVideoUploader] = useState(false);
       var arrayOfVideos = props.arrayOfVideos;
       var videoTableEnabledArray = props.videoTableEnabledArray;
+      
+      
       const allVideosColumns: GridColDef [] = [
             {field: 'Title', headerName: 'Title', width: 350, headerAlign: 'center', align: 'center'},
             {field: 'Upload Date', headerName: 'Upload Date', width: 150, headerAlign: 'center', align: 'center'},
@@ -19,7 +24,7 @@ function MediaTable(props){
             {field: 'btn', headerName: 'Actions', renderCell: (params) => (
                   <strong>
                         <span>
-                              <Link to = '/Goldilocks-Suds-Website-Deploy/media/view-video'>
+                              <Link to = '/Goldilocks-Suds-Website-Deploy/media/edit-video'>
                                     <Button variant="contained" size="small" onClick = {()=>viewVideoHandler(params)}> VIEW </Button> 
                               </Link>
 
@@ -28,8 +33,8 @@ function MediaTable(props){
             ), width: 130, headerAlign: 'center', align: 'center'},
       ];
 
-      function viewVideoHandler(){
-
+      function viewVideoHandler(params){
+            selectedVideoID = params.id;
       }
 
       const dataGrid = (<DataGrid
@@ -43,7 +48,14 @@ function MediaTable(props){
             rowsPerPageOptions={[20]}
       />);
 
+      function toggleVideoUploader(){
+            setShowVideoUploader(!showVideoUploader)
+      }
 
+      function returnModal () {
+            return ( <VideoUploader toggle={toggleVideoUploader}/>);
+        }
+        
 
       return(
             <div>
@@ -54,13 +66,13 @@ function MediaTable(props){
                         </div>
                   </ul>
                   <div>
-                        <Link to='/Goldilocks-Suds-Website-Deploy/media/add-new'>
-                              <Button variant="contained" size="large">
-                                    ADD NEW
-                              </Button>                                        
-                        </Link>
+                        <Button variant="contained" size="large" onClick={toggleVideoUploader}>
+                              ADD NEW
+                        </Button>                                        
                   </div>
+                  {showVideoUploader?  returnModal():null}
             </div>
       );      
 }
 export default MediaTable;
+export {selectedVideoID};

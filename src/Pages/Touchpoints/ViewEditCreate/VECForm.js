@@ -26,8 +26,7 @@ function VECForm(props){
     }
 
     function PushFirebaseTP(touchpointValues){
-        console.log(touchpointValues.uid);
-        set(ref(db, 'TouchpointTemplates/' + touchpointValues.uid), touchpointValues);
+        set(ref(db, 'TouchpointTemplates/' + touchpointValues.UID), touchpointValues);
     }
 
     function DeleteFirebaseTP(uid){
@@ -55,9 +54,9 @@ function VECForm(props){
         <div>
             <h1 className={classes.h1}>Create New Touchpoint</h1>
             <br/>
-            <Dropdown isOpen={dropdown} toggle={openCloseDropdown}>
+            <Dropdown isOpen={dropdown} toggle={openCloseDropdown} >
                 <DropdownToggle caret className={classes.dropdownBtn}>
-                    'Touchpoint Type
+                    Touchpoint Type
                 </DropdownToggle>
 
                 <DropdownMenu>

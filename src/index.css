@@ -30,6 +30,17 @@ h4 {
   color: red;
 }
 
+h5{
+  font-weight: bold;
+  font-size: 0.3rem;
+  color: #2c292b;
+}
+
+h6{
+  font-size: 0.3rem;
+  color: #2c292b;
+}
+
 .btn {
   font: inherit;
   padding: 0.5rem 1.5rem;

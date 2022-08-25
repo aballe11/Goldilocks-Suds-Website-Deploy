@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
+import {uid} from 'uid';
 
 function R5Form(props) {
 
@@ -31,30 +32,6 @@ function R5Form(props) {
         duplicateAliasPrompt = '(Make sure to change the duplicate\'s alias!)';
     }
 
-    function SubmitHandler(event) {
-        event.preventDefault();
-
-        const enteredAlias = touchpointAlias.current.value;
-        const enteredPromptQuestion = touchpointPrompt.current.value;
-        const enteredLeftOption = touchpointLeftOption.current.value;
-        const enteredCenterOption = touchpointCenterOption.current.value;
-        const enteredRightOption = touchpointRightOption.current.value;
-
-        const touchpointValues = {
-            //uid: ((existing) ? props.arrayOfTemplates.uid : uid()),
-            UID: props.arrayOfTemplates.UID,
-            Alias: enteredAlias,
-            Prompt: enteredPromptQuestion,
-            LeftOption: enteredLeftOption,
-            CenterOption: enteredCenterOption,
-            RightOption: enteredRightOption,
-            Type: 'R5',
-            TimesUsed: props.arrayOfTemplates.TimesUsed,
-            //TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
-        };
-        props.writeToDatabase(touchpointValues);
-    }
-
     function deleteTemplate(){
         props.deleteFromDatabase(props.arrayOfTemplates.UID);
     }
@@ -66,6 +43,31 @@ function R5Form(props) {
             </Link>);
         }
     }
+
+    function SubmitHandler(event) {
+        event.preventDefault();
+
+        const enteredAlias = touchpointAlias.current.value;
+        const enteredPromptQuestion = touchpointPrompt.current.value;
+        const enteredLeftOption = touchpointLeftOption.current.value;
+        const enteredCenterOption = touchpointCenterOption.current.value;
+        const enteredRightOption = touchpointRightOption.current.value;
+
+        const touchpointValues = {
+            UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID:uid())),
+            Alias: enteredAlias,
+            Prompt: enteredPromptQuestion,
+            LeftOption: enteredLeftOption,
+            CenterOption: enteredCenterOption,
+            RightOption: enteredRightOption,
+            Type: 'R5',
+            TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
+        };
+        props.writeToDatabase(touchpointValues);
+        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
+    }
+
+
 
     return (
         <div>

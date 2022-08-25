@@ -2,9 +2,10 @@ import { useRef } from 'react';
 import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
+import {uid} from 'uid';
 
 function R10Form(props) {
-    //let propsArr = props;
+
     const touchpointAlias = useRef('');
     const touchpointPrompt = useRef('');
     const touchpointMinimumOption = useRef('');
@@ -17,14 +18,14 @@ function R10Form(props) {
     var duplicateAliasPrompt = '';
     var titleDefaultValue = '10-Based Rating';
 
-    console.log(props.duplicate);
-    if (props.view === true || props.duplicate ===true) {
+    if (props.view === true || props.duplicate === true) {
+
         aliasDefaultValue = props.arrayOfTemplates.Alias;
         promptDefaultValue = props.arrayOfTemplates.Prompt;
         minimumOptionDefaultValue = props.arrayOfTemplates.MinimumOption;
         maximumOptionDefaultValue = props.arrayOfTemplates.MaximumOption;
-        
     } 
+    
     if(props.duplicate === true){
         titleDefaultValue = '10-Based Rating - Duplicate';
         duplicateAliasPrompt = '(Make sure to change the duplicate\'s alias!)';
@@ -51,18 +52,16 @@ function R10Form(props) {
         const enteredMinimumOption = touchpointMinimumOption.current.value;
 
         const touchpointValues = {
-            //uid: ((props.duplicate) ? props.arrayOfTemplates.uid : uid()),
-            UID: props.arrayOfTemplates.UID,
+            UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID:uid())),
             Alias: enteredAlias,
             Prompt: enteredPromptQuestion,
             MaximumOption: enteredMaximumOption,
             MinimumOption: enteredMinimumOption,
             Type: 'R10',
-            TimesUsed: props.arrayOfTemplates.TimesUsed,
-            //TimesUsed: ((props.duplicate) ? props.arrayOfTemplates.TimesUsed : 0),
+            TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
         };
         props.writeToDatabase(touchpointValues);
-        alert("Template content has been successfully updated!")
+        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     }
 
     return (
@@ -95,7 +94,9 @@ function R10Form(props) {
                 </div>
 
                 <div className={classes.actions}>
-                    <button onClick={SubmitHandler}>Save Template</button>
+                    <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
+                        <button onClick={SubmitHandler}>Save Template</button>
+                    </Link>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
                         <button>Go Back</button>
                     </Link>

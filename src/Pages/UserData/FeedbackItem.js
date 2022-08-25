@@ -37,18 +37,6 @@ function FeedbackItem(props){
             field: 'View Data',
         }
     ];
-    const videoTouchpointsArray = [
-        [
-            {
-            Toggle1:0,
-            Toggle2:0,
-            },
-            {},
-        ],
-        [ 
-
-        ],
-    ];
 
     console.log('------------');
     console.log(props.id);

@@ -11,17 +11,17 @@ function ImageUploader(props){
       const [images, setImages] = useState([]);
       const [promptText, setPromptText] = useState('');
       const [successTxt, setSuccessTxt] = useState(false);
+      const folderNameRef = useRef();
 
       const handleChange = (e) => {
           e.preventDefault();
           for(let i = 0; i < e.target.files.length; i++){
               const newImage = e.target.files[i];
-              newImage['id'] = uid();
               setImages((prevState) => [...prevState, newImage]);
           }
       };
   
-      var enteredFolderTitle = '';
+      var enteredFolderTitle = 'General/';
       const handleUpload = (e) => {
             e.preventDefault();
 
@@ -53,6 +53,7 @@ function ImageUploader(props){
             new Promise(() => {
               setTimeout(() => props.toggle(), 2000)
             });
+
           
             //resolbe("Done!")
             //let result = await promise; // wait until the promise resolves (*)
@@ -60,7 +61,7 @@ function ImageUploader(props){
             //alert(result); // "done!"
       }
 
-      const folderNameRef = useRef();
+      
 
       return(
             <div>

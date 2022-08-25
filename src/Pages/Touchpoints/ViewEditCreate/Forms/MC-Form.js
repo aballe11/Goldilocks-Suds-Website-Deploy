@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
+import {uid} from 'uid';
 
 function MCForm(props) {
 
@@ -29,6 +30,7 @@ function MCForm(props) {
         option3DefaultValue = props.arrayOfTemplates.Option3;
         option4DefaultValue = props.arrayOfTemplates.Option4;
     }
+
     if(props.duplicate === true){
         titleDefaultValue = 'Multiple Choice - Duplicate';
         duplicateAliasPrompt = '(Make sure to change the duplicate\'s alias!)';
@@ -57,8 +59,7 @@ function MCForm(props) {
         const enteredOption4 = touchpointOption4.current.value;
 
         const touchpointValues = {
-            //uid: ((existing) ? props.arrayOfTemplates.uid : uid()),
-            UID: props.arrayOfTemplates.UID,
+            UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID:uid())),
             Alias: enteredAlias,
             Prompt: enteredPromptQuestion,
             Option1: enteredOption1,
@@ -66,10 +67,10 @@ function MCForm(props) {
             Option3: enteredOption3,
             Option4: enteredOption4,
             Type: 'MC',
-            TimesUsed: props.arrayOfTemplates.TimesUsed,
-            //TimesUsed: ((existing) ? props.arrayOfTemplates.TimesUsed : 0),
+            TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
         };
         props.writeToDatabase(touchpointValues);
+        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     }
 
     return (

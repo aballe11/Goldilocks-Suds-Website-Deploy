@@ -1,0 +1,119 @@
+body.active-modal {
+      overflow-y: hidden;
+  }
+  
+  .btn-modal {
+      padding: 10px 20px;
+      display: block;
+      margin: 100px auto 0;
+      font-size: 18px;
+  }
+  
+  .overlay{
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+  }
+
+  .modal{
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+  }
+
+  .inputText {
+      width: 100%;
+  }
+  
+  .overlay {
+      background: rgba(49,49,49,0.8);
+  }
+
+  .btn {
+  font: inherit;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #0b3bac;
+  color: white;
+  border: 1px solid #0b3bac;
+  margin: 0 1rem;
+}
+
+.btn:hover {
+  background-color: #0f4bd5;
+  border-color: #0f4bd5;
+}
+
+  .modalContent {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      
+      line-height: 1.4;
+      background: #f1f1f1;
+      padding: 14px 28px;
+      border-radius: 3px;
+      max-width: 700px;
+      min-width: 500px;
+      min-height: 525px;
+      align-content: left;
+      text-align: left;
+  }
+  
+  .closeModal {
+      font: inherit;
+      cursor: pointer;
+      border-radius: 3px;
+      background-color: #0b3bac;
+      color: white;
+      border: 1px solid #0b3bac;
+      margin: 0 1rem;
+
+      position: absolute;
+      top: 20px;
+      right: 0px;
+      padding: 5px 10px;
+  }
+
+  .closeModal:hover {
+      background-color: #0f4bd5;
+      border-color: #0f4bd5;
+    }
+
+  .uploadImg {
+      font: inherit;
+      padding: 5px 7px;
+      cursor: pointer;
+      border-radius: 3px;
+      background-color: #0b3bac;
+      color: white;
+      border: 1px solid #0b3bac;
+      margin: 0 1rem;  
+      position: relative; 
+      top: 0px;
+      left: 18px;
+
+      position: absolute;
+      top: 90%;
+      right: 20px;
+ 
+  }
+
+  .uploadImg:hover {
+      background-color: #0f4bd5;
+      border-color: #0f4bd5;
+    }
+
+  .boldFont {
+    font-weight: bold;
+  }
