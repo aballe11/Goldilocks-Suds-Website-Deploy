@@ -18,7 +18,7 @@ function FeedbackTable(props){
     const [touchpointTotal, setTouchpointTotal] = useState('')
 
     const allVideosColumns: GridColDef[] = [
-        { field: 'Title', headerName: 'Video Title', width: 300, headerAlign: 'center', align: 'left',},
+        { field: 'Title', headerName: 'Video Title', width: 300, headerAlign: 'center', align: 'center',},
         { field: 'Date', headerName: 'Date Created', width: 200, headerAlign: 'center', align: 'center',},
         { field: 'Responses', headerName: 'Total Responses', width: 226, headerAlign: 'center', align: 'center', type: 'number',},
         { field: 'Status', headerName: 'Status', headerAlign: 'center', align: 'center', width: 150,},
@@ -43,7 +43,7 @@ function FeedbackTable(props){
     ];
     
     function exportAllTouchpoints(){
-        console.log('--------');
+        //console.log('--------');
         
         const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
             JSON.stringify(arrayOfTouchpoints)
@@ -54,11 +54,13 @@ function FeedbackTable(props){
       
           link.click();
     }    
+
     const toTouchpointInformation = (params) => {
         setGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
                             Go Back
                         </Button>);
         setExportButton('');
+
         const tpID = params.id;
         //console.log(tpID);
         //console.log(arrayOfTouchpoints)
@@ -70,6 +72,7 @@ function FeedbackTable(props){
 
         setInsideVideoTitle(chosenVideoTitle + ' | ' + touchpointArray.Alias + ' | ' + touchpointArray.Type);
         setTouchpointTotal('Total Responses: ' + tpTotal);
+
         tpTotal = _.parseInt(tpTotal);
 
         touchpointArray = _.omit(touchpointArray, ['Alias', 'Title', 'Total', 'id', 'Type']);
@@ -122,7 +125,7 @@ function FeedbackTable(props){
                 Go Back
             </Button>
         );
-        console.log(arrayOfTouchpoints);
+        //console.log(arrayOfTouchpoints);
         setDataGrid(<DataGrid
             sx={{ border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
                 '&.MuiDataGrid-toolbarContainer': { padding: 200 }, '.MuiDataGrid-sortIcon': { color: 'rgba(255, 255, 255, 1)', } }}
@@ -152,17 +155,18 @@ function FeedbackTable(props){
             columns={columnsArray}
             pageSize={20}
             rowsPerPageOptions={[20]}
-    />); }
+        />); 
+    }
 
     const toVideoInformation = (params) => {
         videoID = params.id;
-        //console.log(_.get(arrayOfVideos.videoID, videoID));
         const count = _.get(arrayOfVideos, [videoID, 'Count']);
-        chosenVideoTitle = _.get(arrayOfVideos, [videoID, 'Title']);
         tpTotal = _.get(arrayOfVideos, [videoID, 'TotalResponses']);
+        chosenVideoTitle = _.get(arrayOfVideos, [videoID, 'Title']);
 
-        setInsideVideoTitle(chosenVideoTitle);
+        
         setTouchpointTotal('Total Responses: ' + tpTotal);
+        setInsideVideoTitle(chosenVideoTitle);
         setExportButton(
             <Button variant="contained" size="large" onClick={exportAllTouchpoints}>
                 EXPORT ALL
@@ -173,31 +177,44 @@ function FeedbackTable(props){
                 GO BACK
             </Button>
         );
+        
         arrayOfTouchpoints = [];
-        var touchPoints
+        var touchPoints;
+        var touchpointArrayx = {};
         for(let i = 1; i <= count; i++){
-            touchPoints = _.get(arrayOfVideos, [videoID, ('Tp'+i)]);
+            touchPoints = _.get(arrayOfVideos, [videoID, 'Touchpoints']);
             //console.log(touchPoints);
-            touchPoints.id = i;
+            for(let x in touchPoints){
+                //console.log(x);
+                //console.log(touchPoints[x]);
+                //console.log(touchPoints);
+                //console.log(touchPoints.id);
+                //touchpointArray['UID'] = x;
+                touchpointArrayx['id'] = i;
+                touchpointArrayx['Alias'] = touchPoints[x].Alias;
 
-            switch(touchPoints.Type){
-                case 'R10': touchPoints.Type = '10-Based Rating'; 
-                    break;
-                case 'R5': touchPoints.Type = '5-Based Rating';
-                    break;
-                case 'MCI': touchPoints.Type = 'Multiple Choice w/ Images';
-                    break;
-                case 'MC': touchPoints.Type = 'Multiple Choice'
-                    break;
-                case 'FF': touchPoints.Type = 'Freeform Input'
-                    break; 
-                default:
-                    break; }
+                switch(touchPoints[x].Type){
+                    case 'R10': touchpointArrayx['Type'] = '10-Based Rating'; 
+                        break;
+                    case 'R5': touchpointArrayx['Type'] = '5-Based Rating';
+                        break;
+                    case 'MCI': touchpointArrayx['Type'] = 'Multiple Choice w/ Images';
+                        break;
+                    case 'MC': touchpointArrayx['Type'] = 'Multiple Choice'
+                        break;
+                    case 'FF': touchpointArrayx['Type'] = 'Freeform Input'
+                        break; 
+                    default:
+                        break; 
+                }
+                //console.log(touchpointArrayx);
+                arrayOfTouchpoints.push(touchpointArrayx);
+            }
            // touchPoints['btn'] = '';
             //console.log(touchPoints);
-            arrayOfTouchpoints.push(touchPoints);
+            
         } 
-        console.log(arrayOfTouchpoints);
+        //console.log(arrayOfTouchpoints);
         //console.log(arrayOfTouchpoints);
 
         setDataGrid(<DataGrid
@@ -212,8 +229,10 @@ function FeedbackTable(props){
         />);
 
     }
+
     var columnsArray = allVideosColumns;
     var rowsArray = videoTableEnabledArray;
+    
     const [dataGrid, setDataGrid] = useState(<DataGrid
         sx={{ border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
             '&.MuiDataGrid-toolbarContainer': { padding: 200  }, '.MuiDataGrid-sortIcon': { color: 'rgba(255, 255, 255, 1)', } }}

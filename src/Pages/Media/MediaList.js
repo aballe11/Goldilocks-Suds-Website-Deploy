@@ -19,7 +19,7 @@ function MediaList(props){
                  'Upload Date': Date,
                  'Length': Length,
                  'Touchpoints': Touchpoints,
-                 'State': Status,
+                 'Status': Status,
                  'btn': '',
             }) 
       }

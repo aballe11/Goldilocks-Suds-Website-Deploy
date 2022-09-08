@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import { arrayOfTemplates, view, duplicate } from '../TPLibrary/TouchpointTable';
 import R10Form from './Forms/R10-Form';
 import R5Form from './Forms/R5-Form';
@@ -5,13 +6,28 @@ import MCIForm from './Forms/MCI-Form';
 import MCForm from './Forms/MC-Form';
 import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
-import {set, ref, remove} from 'firebase/database';
+import {set, ref, remove, onValue} from 'firebase/database';
 //import _ from 'lodash';
 
 function ViewTouchpoint(){
+      /*const[touchpointIDs, setTouchpointIDs] = useState('');
+
+      useEffect(() => {
+            onValue(dbRef(db, `/TouchpointTemplateIDs` ), snapshot => {
+                  const tpIDs = snapshot.val();
+                  if(tpIDs !== null){
+                        setTouchpointIDs(tpIDs);
+                  };
+            });    
+      }, []);*/
+      
       function PushFirebaseTP(touchpointValues){
             set(ref(db, 'TouchpointTemplates/' + touchpointValues.UID), touchpointValues);
       }
+
+      /*function PushFirebaseTpIDs(StringIDs) {
+            set(ref(db, 'TouchpointTemplatesIDs/'), StringIDs);
+      }*/
 
       function DeleteFirebaseTP(uid){
             remove(ref(db, 'TouchpointTemplates/' + uid));
@@ -20,15 +36,15 @@ function ViewTouchpoint(){
       const functionWithSwitch = (parameter) => {
             switch(parameter){
                   case "R10":
-                        return <R10Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
+                        return <R10Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
                   case "R5":
-                          return <R5Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
+                          return <R5Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
                   case "FF":
-                        return <FFForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
+                        return <FFForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
                   case "MC":
-                        return <MCForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
+                        return <MCForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
                   case "MCI":
-                        return <MCIForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
+                        return <MCIForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ arrayOfTemplates = {arrayOfTemplates} view = {view} duplicate = {duplicate}/>;
                   default:
                         break;
              }

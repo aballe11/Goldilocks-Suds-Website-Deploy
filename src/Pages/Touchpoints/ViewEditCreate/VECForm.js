@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import classes from './VECForm.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'reactstrap';
@@ -9,12 +9,23 @@ import MCIForm from './Forms/MCI-Form';
 import MCForm from './Forms/MC-Form';
 import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
-import {set, ref, remove} from 'firebase/database';
+import {set, ref, remove, onValue} from 'firebase/database';
 import _ from 'lodash';
 
 
 function VECForm(props){
  
+
+    /*useEffect(() => {
+        onValue(dbRef(db, `/TouchpointTemplateIDs` ), snapshot => {
+              const tpIDs = snapshot.val();
+              if(tpIDs !== null){
+                    setTouchpointIDs(tpIDs);
+              };
+        });    
+    }, []);*/
+  
+
     const [dropdown, setDropdown] = useState(false);
     const openCloseDropdown=()=>{
         setDropdown(!dropdown);
@@ -31,20 +42,24 @@ function VECForm(props){
 
     function DeleteFirebaseTP(uid){
         remove(ref(db, 'TouchpointTemplates/' + uid));
-  }
+    }
+
+    /*function PushFirebaseTpIDs(StringIDs) {
+        set(ref(db, 'TouchpointTemplatesIDs/'), StringIDs);
+    }*/
 
     const functionWithSwitch = (parameter) => {
         switch(parameter){
             case "R10":
-                return <R10Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
+                return <R10Form writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             case "R5":
-                return <R5Form writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
+                return <R5Form writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             case "FF":
-                return <FFForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
+                return <FFForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             case "MC":
-                return <MCForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
+                return <MCForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             case "MCI":
-                return <MCIForm writeToDatabase = {PushFirebaseTP} deleteFromDatabase = {DeleteFirebaseTP} />;
+                return <MCIForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             default:
                 break;
         }

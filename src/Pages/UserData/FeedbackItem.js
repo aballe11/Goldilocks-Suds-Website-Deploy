@@ -38,14 +38,14 @@ function FeedbackItem(props){
         }
     ];
 
-    console.log('------------');
-    console.log(props.id);
-    console.log(props.title);
-    console.log(videoArray);
-    console.log(listOfKeys);
-    console.log(count);
-    console.log(dateCreated);
-    console.log(totalResponses)
+    //console.log('------------');
+    //console.log(props.id);
+    //console.log(props.title);
+    //console.log(videoArray);
+    //console.log(listOfKeys);
+    //console.log(count);
+    //console.log(dateCreated);
+    //console.log(totalResponses)
     
     const finalRender = [];
     var touchpointTitle = '';

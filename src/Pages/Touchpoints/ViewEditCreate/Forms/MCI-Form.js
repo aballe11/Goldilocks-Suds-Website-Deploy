@@ -11,8 +11,11 @@ import _ from 'lodash';
 
 function MCIForm(props) {
     const selectedIDs = [];
+    const selectedNames = [];
     const touchpointAlias = useRef();
     const touchpointPrompt = useRef();
+    const [touchpointIDs, setTouchpointIDs] = useState('');
+
 
     var aliasDefaultValue = '';
     var promptDefaultValue = '';
@@ -23,10 +26,14 @@ function MCIForm(props) {
         aliasDefaultValue = props.arrayOfTemplates.Alias;
         promptDefaultValue = props.arrayOfTemplates.Prompt;
         var x = _.split(props.arrayOfTemplates.ImageIDs, '/');
+        var y = _.split(props.arrayOfTemplates.ImageNames, '/');
         for(let id in x){
             selectedIDs.push(x[id]);
         }
-        console.log(selectedIDs);
+        for(let name in y){
+            selectedNames.push(y[name]);
+        }
+        //console.log(selectedIDs);
     }
     if(props.duplicate === true){
         titleDefaultValue = 'Multiple Choice w/ Images - Duplicate';
@@ -53,6 +60,13 @@ function MCIForm(props) {
         _.remove(selectedIDs, function(n){return n===ID});
     }
 
+    function addName(name){
+        selectedNames.push(name);
+    }
+    function removeName(name){
+        _.remove(selectedNames, function(n){return n===name});
+    }
+
 
     function SubmitHandler(event) {
         event.preventDefault();
@@ -60,6 +74,7 @@ function MCIForm(props) {
         const enteredAlias = touchpointAlias.current.value;
         const enteredPromptQuestion = touchpointPrompt.current.value;
         var stringSelectedIDs = _.join(selectedIDs, '/');
+        var stringSelectedNames = _.join(selectedNames, '/');
 
         const touchpointValues = {
             UID: ((props.duplicate) ? uid() : ((props.view) ? props.arrayOfTemplates.UID : uid())),
@@ -68,8 +83,12 @@ function MCIForm(props) {
             Type: 'MCI',
             TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
             ImageIDs: stringSelectedIDs,
+            ImageNames: stringSelectedNames,
         };
         props.writeToDatabase(touchpointValues);
+
+        
+
         window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     };
     
@@ -112,7 +131,7 @@ function MCIForm(props) {
                 {showImageUploader?  returnModal():null }
             </div>
             <div>
-                {(props.view||props.duplicate)? <Gallery chosenFile = {selectedIDs[0]} removeID={removeID} addID={addID} existing={true} selectedIDs={selectedIDs}/>:<GalleryDropdown removeID={removeID} addID={addID}/>}
+                {(props.view||props.duplicate)? <Gallery chosenFile = {selectedIDs[0]} removeID={removeID} addID={addID} addName={addName} removeName={removeName} existing={true} selectedIDs={selectedIDs}/>:<GalleryDropdown removeID={removeID} addID={addID} addName={addName} removeName={removeName}/>}
             </div>
         </div>
     );

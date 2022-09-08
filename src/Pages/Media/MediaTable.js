@@ -20,7 +20,7 @@ function MediaTable(props){
             //{field: 'Description', headerName: 'Description', width: 250, headerAlign: 'center', align: 'center'},
             {field: 'Length', headerName: 'Length (s)', width: 120, headerAlign: 'center', align: 'center'},
             {field: 'Touchpoints', headerName: 'Touchpoints (amt)', width: 175, headerAlign: 'center', align: 'center'},
-            {field: 'State', headerName: 'State', width: 110, headerAlign: 'center', align: 'center'},
+            {field: 'Status', headerName: 'Status', width: 110, headerAlign: 'center', align: 'center'},
             {field: 'btn', headerName: 'Actions', renderCell: (params) => (
                   <strong>
                         <span>

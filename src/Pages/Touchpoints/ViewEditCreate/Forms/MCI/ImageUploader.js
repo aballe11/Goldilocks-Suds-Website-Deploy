@@ -4,6 +4,7 @@ import { ref, uploadBytes } from 'firebase/storage';
 import { uid } from 'uid';
 import classes from './ImageUploader.module.css';
 import TextField from '@mui/material/TextField';
+import _ from 'lodash';
 
 function ImageUploader(props){
       
@@ -25,7 +26,7 @@ function ImageUploader(props){
       const handleUpload = (e) => {
             e.preventDefault();
 
-            console.log(folderNameRef.current.value);
+            //console.log(folderNameRef.current.value);
             if(folderNameRef.current.value !== '') {
                   enteredFolderTitle = folderNameRef.current.value + '/';
             }
@@ -34,7 +35,8 @@ function ImageUploader(props){
             if(images.length === 0) {return alert("No images have been selected.");};
             const promises = [];
             images.map((image) => {
-                  const imageRef = ref(storage, `Touchpoint Template Images/${enteredFolderTitle}${image.name}_${uid()}`);
+                  var imgName = _.split(image.name, '.');
+                  const imageRef = ref(storage, `Touchpoint Template Images/${enteredFolderTitle}${imgName[0]}_${uid()}`);
                   const uploadTask = uploadBytes(imageRef, image);
                   promises.push(uploadTask);
             });

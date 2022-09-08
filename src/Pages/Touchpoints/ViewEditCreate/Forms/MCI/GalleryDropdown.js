@@ -67,7 +67,7 @@ function GalleryDropdown(props){
                         </DropdownMenu>
                   </Dropdown>:null}
                   <br/>
-                  {galleryToggle ? <Gallery chosenFile = {chosenFile} removeID={props.removeID} addID={props.addID} />:null}
+                  {galleryToggle ? <Gallery chosenFile = {chosenFile} removeID={props.removeID} addID={props.addID} addName ={props.addName} removeName={props.removeName}/>:null}
                   
             </div>
 

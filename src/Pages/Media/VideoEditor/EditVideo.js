@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './EditVideo.css';
 import {selectedVideoID} from '../MediaTable';
-import {db} from '../../Firebase';
-import {ref, onValue, remove, set} from "firebase/database";
-import ExistingTouchpoint from './ExistingTouchpoint.js';
+import {db, storage} from '../../Firebase';
+import {ref as dbRef, onValue, remove, set, get} from "firebase/database";
+import {deleteObject, ref as srgRef} from "firebase/storage";
+import {ExistingTouchpoint} from './ExistingTouchpoint.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import '@videojs/themes/dist/sea/index.css';
@@ -15,6 +16,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {uid} from 'uid';
 import { Link } from 'react-router-dom';
+import { breadcrumbsClasses } from '@mui/material';
 
 
 function EditVideo(){
@@ -29,19 +31,68 @@ function EditVideo(){
       const [dropdownValue, setDropdownValue] = useState('');
       const [videoState, setVideoState] = useState('');
       const [uploadValue, setUploadValue] = useState('');
+      const [VideosAmt, setVideosAmt] = useState(0);
+      const [VideoIDs, setVideoIDs] = useState('');
+      const [storageName, setStorageName] = useState('');
+      const [touchpointCount, setTouchpointCount] = useState(0);
+      const [videoName, setVideoName] = useState('');
+       
+      
 
       useEffect(() => {
-            onValue(ref(db, `/Videos/${selectedVideoID}` ), snapshot => {
+            onValue(dbRef(db, `/Videos/${selectedVideoID}` ), snapshot => {
                   const vidData = snapshot.val();
                   if(vidData !== null){
                         setVideoData(vidData);
+                        setVideoName(vidData.Alias);
                         setVideoState(vidData.Active);
                   };
             });    
       }, []);
 
+
       useEffect(() => {
-            onValue(ref(db, '/TouchpointTemplates' ), snapshot => {
+            onValue(dbRef(db, `/Videos/${selectedVideoID}/StorageName` ), snapshot => {
+                  const strgName = snapshot.val();
+                  if(strgName !== null){
+                        setStorageName(strgName);
+                  };
+            });    
+      }, []);
+
+      useEffect(() => {
+            onValue(dbRef(db, `/VideoIDs` ), snapshot => {
+                  const vidIDs = snapshot.val();
+                  //console.log(vidIDs);
+                  if(vidIDs !== null){
+                        setVideoIDs(vidIDs);
+                  };
+            });    
+      }, []);
+
+
+      useEffect(() => {
+            onValue(dbRef(db, `/VideosAmt` ), snapshot => {
+                  const vidAmt = snapshot.val();
+                  //console.log(vidAmt);
+                  if(vidAmt !== null){
+                        setVideosAmt(vidAmt);
+                  };
+            });    
+      }, []);
+
+      useEffect(() => {
+            onValue(dbRef(db, `/Feedback/${selectedVideoID}/Count` ), snapshot => {
+                  const cnt = snapshot.val();
+                  //console.log(cnt);
+                  if(cnt !== null){
+                        setTouchpointCount(cnt);
+                  };
+            });    
+      }, []);
+
+      useEffect(() => {
+            onValue(dbRef(db, '/TouchpointTemplates' ), snapshot => {
                   const tpData = snapshot.val();
                   if(tpData !== null){
                         setTpTemplatesData(tpData);
@@ -57,12 +108,14 @@ function EditVideo(){
             MC: 'Multiple Choice',
             FF: 'Freeform Input',
       }
+
       for(let x in tpTemplatesData){
             templateDropdownOptions.push({
                   label: tpTemplatesData[x].Alias, id: tpTemplatesData[x].UID, type: types[tpTemplatesData[x].Type],
             });
       }
-      console.log(templateDropdownOptions);
+
+      //console.log(templateDropdownOptions);
 
 
       const options = {
@@ -86,14 +139,32 @@ function EditVideo(){
             };
       }, [options, videoRef, playerRef])
 
-      console.log(videoData.Touchpoints);
+      //console.log(videoData.Touchpoints);
 
-      const uniqueTemplateIDs = [];
-      const videoDataTouchpoints = videoData.Touchpoints;
+      var uniqueTemplateIDs = [];
+      var arr = videoData.Touchpoints;
+      var dict = {};
+      var arrayOfTemplatess = [];
+      console.log(arr);
+      
 
-      for(let x in videoDataTouchpoints){
-            uniqueTemplateIDs.push(x);
+      for(let x in arr){
+            var y =_.split(arr[x], '/');
+            var h =  _.parseInt(y[0]);
+            var z = _.sortedIndex(arrayOfTemplatess, h);
+            arrayOfTemplatess.splice(z, 0, _.parseInt(y[0]));
+            uniqueTemplateIDs.splice(z, 0, x);
       }
+
+      /*for(let x in arr){
+            var y = _.split(arr[x], '/');
+            var z = _.indexOf(arrayOfTemplatess, y[0]);
+
+            console.log('For ' + x + ' in second ' + y + ', fits at index ' + z);
+            uniqueTemplateIDs.splice(z, 0, x);
+            console.log(uniqueTemplateIDs);
+      }*/
+
 
       const [touchpoint, setTouchpoint] = useState(null);
       const [selectedTemplateName, setSelectedTemplateName] = useState(null);
@@ -101,12 +172,27 @@ function EditVideo(){
       const [selectedTemplateID, setSelectedTemplateID] = useState(null);
 
       function deleteHandler(){
-            remove(ref(db, `Videos/${selectedVideoID}/Touchpoints/${touchpoint}`));
+            //console.log(touchpoint);
+            remove(dbRef(db, `Videos/${selectedVideoID}/Touchpoints/${touchpoint}`));
+            remove(dbRef(db, `Feedback/${selectedVideoID}/Touchpoints/${touchpoint}`));
+            set(dbRef(db, `Feedback/${selectedVideoID}/Count`), touchpointCount-1);
+            set(dbRef(db, `Videos/${selectedVideoID}/TouchpointsAmt`), touchpointCount-1);
             setTouchpointIsSelected(false);
       }
 
       function deleteVideoHandler(){
-            remove(ref(db, `Videos/${selectedVideoID}`));
+            remove(dbRef(db, `Videos/${selectedVideoID}`));
+            remove(dbRef(db, `Feedback/${selectedVideoID}`));
+
+            set(dbRef(db, 'VideosAmt/'), VideosAmt - 1)
+
+
+            var x = _.split(VideoIDs, '/');
+            x = _.without(x, selectedVideoID);
+            var vidIDs = _.join(x, '/');
+            set(dbRef(db, 'VideoIDs/'), vidIDs)
+
+            deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{console.log('Delete successful!')}).catch((error)=>{console.log(error)});
       }
 
       function addHandler(){
@@ -116,7 +202,48 @@ function EditVideo(){
 
       function saveHandler(){
             var uploadString = currentTime + '/' + uploadValue;
-            set(ref(db, `Videos/${selectedVideoID}/Touchpoints/${uid()}`), uploadString);
+            var newTpID = uid();
+            set(dbRef(db, `Videos/${selectedVideoID}/Touchpoints/${newTpID}`), uploadString);
+            console.log(tpTemplatesData);
+            var feedbackDict = {};
+            switch(tpTemplatesData[uploadValue].Type){
+                  case 'MCI':
+                        feedbackDict['Total'] = 0; feedbackDict ['Type'] = 'MCI'; feedbackDict['Alias'] = tpTemplatesData[uploadValue].Alias;
+                        var images = _.split(tpTemplatesData[uploadValue].ImageNames, '/');
+                        for(let x in images){
+                              feedbackDict[images[x]] = 0;
+                        }
+                        
+                        break;
+                  case 'MC':
+                        feedbackDict = {
+                              Option_1_1: 0, Option_2_2: 0, Option_3_3: 0, Option_4_4: 0, Total: 0, 
+                              Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias,
+                        };
+                        break;
+                  case 'FF':
+                        feedbackDict = {
+                              Responses: "", Total: 0, Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias,
+                        };
+                        break;
+                  case 'R10':
+                        feedbackDict = {
+                              Option_1_1: 0, Option_2_2: 0,Option_3_3: 0, Option_4_4: 0, Option_5_5: 0, Option_6_6: 0, Option_7_7: 0, Option_8_8: 0, 
+                              Option_9_9: 0, Option_10_10: 0, Total: 0, Type: 'R10', Alias: tpTemplatesData[uploadValue].Alias,
+                        };
+                        break;
+                  case 'R5':
+                        feedbackDict = {
+                              'Option_-2_1': 0, 'Option_-1_2': 0, Option_0_3: 0, Option_1_4: 0,
+                              Option_2_5: 0, Total: 0, Type: 'R5', Alias: tpTemplatesData[uploadValue].Alias,
+                        };
+                        break;
+            }
+            set(dbRef(db, `Feedback/${selectedVideoID}/Count`), (touchpointCount+1));
+            set(dbRef(db, `Videos/${selectedVideoID}/TouchpointsAmt`), (touchpointCount+1));
+
+            set(dbRef(db, `Feedback/${selectedVideoID}/Touchpoints/${newTpID}`), feedbackDict);
+            
             setDropdownValue('');
             setCreateNewTouchpoint(false);
 
@@ -127,7 +254,8 @@ function EditVideo(){
       }
 
       function stateHandler(){
-            set(ref(db, `Videos/${selectedVideoID}/Active`), !videoState);
+            set(dbRef(db, `Videos/${selectedVideoID}/Active`), !videoState);
+            set(dbRef(db, `Feedback/${selectedVideoID}/Active`), !videoState);
             setVideoState(!videoState);
             
       }
@@ -135,11 +263,13 @@ function EditVideo(){
       const handleDropdownChange = (event, newDropdownValue) => {
             setDropdownValue(newDropdownValue.label);
             setUploadValue(newDropdownValue.id)
+            
       }
 
       const handleChange = (event, newTouchpoint) => {
             if(createNewTouchpoint){ setCreateNewTouchpoint(false); }
             if(!touchpointIsSelected){ setTouchpointIsSelected(true); }
+            setTouchpoint(newTouchpoint);
             playerRef.current.currentTime();
       };
 
@@ -166,7 +296,7 @@ function EditVideo(){
                         <ToggleButtonGroup size = "small" color="primary" orientation="vertical" value={touchpoint} exclusive onChange={handleChange}>
                               {uniqueTemplateIDs.map((IDs) => {
                                     //console.log(videoDataTouchpoints[IDs]);
-                                    const data = _.split(videoDataTouchpoints[IDs], '/');
+                                    const data = _.split(videoData.Touchpoints[IDs], '/');
                                     //console.log(data);
                                     var second = data[0];
                                     var id = data[1];
@@ -186,20 +316,21 @@ function EditVideo(){
 
                         <div className="column center">
                               <h1>Video Editor</h1>
+                              <h5>&ensp;{videoName}</h5>
                               <div data-vjs-player>
                                     <video ref={videoRef} className={`video-js vjs-big-play-centered vjs-theme-sea}`}/>
                               </div>
                               <br/>
                               <div>
-                                    <h5>Current state: {videoState? 'Active':'Inactive'}</h5> 
+                                    <h5>&nbsp;Current state: {videoState? 'Active':'Inactive'}</h5> 
+                                    
+                                    &emsp;&emsp;&ensp;&nbsp;
                                     <button className='btnState' onClick={stateHandler}>Set State</button>
-                                    <br/>
-                                    <br/>
+                                    &emsp;
                                     <Link to = '/Goldilocks-Suds-Website-Deploy/media'>
                                           <button className='btnState' onClick={deleteVideoHandler}>Delete Video</button>
                                     </Link>
-                                    <br/>
-                                    <br/>
+                                    &emsp;
                                     <Link to = '/Goldilocks-Suds-Website-Deploy/media'>
                                           <button className='btnState'>Go Back</button>
                                     </Link>

@@ -11,24 +11,33 @@ function Gallery(props){
       const imageListRef = ref(storage, `Touchpoint Template Images/${props.chosenFile}`);
       const [imageList, setImageList] = useState([]);  
       const [idList, setIdList] = useState([]);
+      const [nameList, setNameList] = useState([]);
       const [errorText, setErrorText] = useState(false);
       
       useEffect(() => {
             listAll(imageListRef).then((response) => {
                   response.items.forEach((item) => {
                         var imgID = _.split(item.name, '_');
+                        var imgName = _.split(imgID[0], '.');
                         getDownloadURL(item).then((url) => {
                               setImageList((prev) => [...prev, url]);
                               setIdList((prev) => [...prev, imgID[1]])
+                              setNameList((prev) => [...prev, imgName[0]])
                         }) 
                   });
             });
       }, []);
 
-      var imagesDict = {};
+      var imagesURLDict = {};
       for(let i = 0; i < imageList.length; i++){
-            imagesDict[idList[i]] = imageList[i];
+            imagesURLDict[idList[i]] = imageList[i];
       }
+      var imagesNameDict = {};
+      for(let i = 0; i < imageList.length; i++){
+            imagesNameDict[idList[i]] = nameList[i];
+      }
+      //console.log(imagesURLDict);
+      //console.log(imagesNameDict);
 
       const [selectedImagesAmt, setSelectedImagesAmt] = useState(0);
       const [firstCall, setFirstCall] = useState(true);
@@ -47,6 +56,7 @@ function Gallery(props){
                         document.getElementById(key).firstChild.className = null;
                         document.getElementById(key).lastChild.textContent = "";
                         props.removeID(key);
+                        props.removeName(imagesNameDict[key]);
                         setSelectedImagesAmt(selectedImagesAmt-1);
                  
                         
@@ -54,6 +64,7 @@ function Gallery(props){
                         document.getElementById(key).firstChild.className = "opaque";
                         document.getElementById(key).lastChild.textContent = "Selected";
                         props.addID(key);
+                        props.addName(imagesNameDict[key]);
                         setSelectedImagesAmt(selectedImagesAmt+1);
                   } else {
                         setErrorText(true);
@@ -74,14 +85,14 @@ function Gallery(props){
                                           if(props.selectedIDs.includes(key)){
                                                 return(
                                                       <div className = "pics" key = {key} id={key} onClick={() => {idHandler(key)}}>
-                                                            <img src={imagesDict[key]}  style={{width: '100%'}} className = "opaque"/>
+                                                            <img src={imagesURLDict[key]}  style={{width: '100%'}} className = "opaque"/>
                                                             <label className="label" >Selected</label>
                                                       </div> 
                                                 );
                                           } else {
                                                 return (
                                                       <div className = "pics" key = {key} id={key} onClick={() => {idHandler(key)}}>
-                                                            <img src={imagesDict[key]}  style={{width: '100%'}}/>
+                                                            <img src={imagesURLDict[key]}  style={{width: '100%'}}/>
                                                             <label className="label" ></label>
                                                       </div>
                                                 );
@@ -89,7 +100,7 @@ function Gallery(props){
                                     } else{
                                           return (
                                                 <div className = "pics" key = {key} id={key} onClick={() => {idHandler(key)}}>
-                                                      <img src={imagesDict[key]}  style={{width: '100%'}}/>
+                                                      <img src={imagesURLDict[key]}  style={{width: '100%'}}/>
                                                       <label className="label" ></label>
                                                 </div>
                                           );

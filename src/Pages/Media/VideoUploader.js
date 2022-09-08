@@ -1,4 +1,4 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import {storage, db} from "../Firebase";
 import { ref as strgRef, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { set, onValue, ref as dbRef } from 'firebase/database';
@@ -6,6 +6,7 @@ import { uid } from 'uid';
 import classes from './VideoUploader.module.css';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import _ from 'lodash';
 
 function VideoUploader(props){
 
@@ -16,10 +17,13 @@ function VideoUploader(props){
 
       const [promptText, setPromptText] = useState('');
       const [successText, setSuccessText] = useState(false);
+      const [VideosAmt, setVideosAmt] = useState(0);
+      const [VideoIDs, setVideoIDs] = useState('');
       //const [downloadURL, setDownloadURL] = useState('');
 
       const [alignment, setAlignment] = useState('180');
       var videosAmt = 0;
+      var videoIDs = '';
       
 
       const videoDataArray = [];
@@ -28,6 +32,27 @@ function VideoUploader(props){
       var videoTitleRef = '';
       var videoDurationRef = '';
 
+      useEffect(() => {
+            onValue(dbRef(db, `/VideoIDs` ), snapshot => {
+                  const vidIDs = snapshot.val();
+                  //console.log(vidIDs);
+                  if(vidIDs !== null){
+                        setVideoIDs(vidIDs);
+                  };
+            });    
+      }, []);
+
+
+      useEffect(() => {
+            onValue(dbRef(db, `/VideosAmt` ), snapshot => {
+                  const vidAmt = snapshot.val();
+                  //console.log(vidAmt);
+                  if(vidAmt !== null){
+                        setVideosAmt(vidAmt);
+                  };
+            });    
+      }, []);
+      
 
       const handleUpload = (e) => {
             e.preventDefault();
@@ -80,9 +105,15 @@ function VideoUploader(props){
       
       function infoUpload(videoUID, url){
             
-            onValue(dbRef(db, '/VideosAmt' ), snapshot => {
+            /*onValue(dbRef(db, '/VideosAmt' ), snapshot => {
                   videosAmt = snapshot.val();
-            });    
+            });   
+            //console.log(videosAmt);
+            
+            onValue(dbRef(db, '/VideoIDs' ), snapshot => {
+                  videoIDs = snapshot.val();
+            });
+            //console.log(VideoIDs);*/
 
             const current = new Date();
             const videoData = {
@@ -96,13 +127,29 @@ function VideoUploader(props){
                   DownloadURL: url,
                   Type: alignment,
                   VideoIndex: videosAmt,
+                  StorageName: `${video.name}_${videoUID}`,
             }
-            console.log(videoUID);
-            console.log(url);
-            console.log(videoData);
+            const videoFeedbackData = {
+                  Count: 0,
+                  'Date_(D-M-Y)': `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`,
+                  Status: 'Inactive',
+                  Title: videoTitleRef,
+                  TotalResponses: 0,
+                  Touchpoints: '',
+            }
+            //console.log(videoUID);
+            //console.log(url);
+            //console.log(videoData);
             
             set(dbRef(db, 'Videos/' + videoUID ), videoData);
-            set(dbRef(db, 'VideosAmt/'), videosAmt + 1);
+            set(dbRef(db, 'Feedback/' + videoUID ), videoFeedbackData);
+            set(dbRef(db, 'VideosAmt/'), VideosAmt + 1);
+
+            var x = _.split(VideoIDs, '/');
+            x.push(videoUID);
+            var vidIDs = _.join(x, '/');
+            set(dbRef(db, 'VideoIDs/'), vidIDs);
+            
            
       }
 
