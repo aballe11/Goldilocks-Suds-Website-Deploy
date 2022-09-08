@@ -21,7 +21,8 @@ function VideoUploader(props){
       const [VideoIDs, setVideoIDs] = useState('');
       //const [downloadURL, setDownloadURL] = useState('');
 
-      const [alignment, setAlignment] = useState('180');
+      //const [alignment, setAlignment] = useState('180');
+      const [dimensionsAlignment, setDimensionsAlignment] = useState('5K');
       var videosAmt = 0;
       var videoIDs = '';
       
@@ -56,16 +57,6 @@ function VideoUploader(props){
 
       const handleUpload = (e) => {
             e.preventDefault();
-
-            
-            /*if(videoNameRef.current.value !== ''){
-                  console.log
-                  videoAlias = video[0].name;
-                  console.log(videoAlias);
-            } else {
-                  videoAlias = videoNameRef.current.value + '.mp4';
-            }*/
-
             
             setUploadingState(true);
 
@@ -79,13 +70,22 @@ function VideoUploader(props){
             const videoUID = uid();
             const videoRef = strgRef(storage, `Videos/${video.name}_${videoUID}`);
             const uploadTask = uploadBytesResumable(videoRef, video);
+            
+ 
+
+
+
+
+            
 
             uploadTask.on(
                   "state_changed",
                   (snapshot) => {
                         const progress = Math.round(
+                              
                               (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                         );
+                        
                         setPromptText('Uploading video: ' + progress + '%');
                   },
                   (err) => {console.log(err); setPromptText('Error. Check console for details.')},
@@ -125,9 +125,9 @@ function VideoUploader(props){
                   Title: videoTitleRef,
                   TouchpointsAmt: 0,
                   DownloadURL: url,
-                  Type: alignment,
-                  VideoIndex: videosAmt,
+                  //Type: alignment,
                   StorageName: `${video.name}_${videoUID}`,
+                  Resolution: dimensionsAlignment,
             }
             const videoFeedbackData = {
                   Count: 0,
@@ -167,9 +167,14 @@ function VideoUploader(props){
       }
 
       
-      const handleChange = (event, newAlignment) => {
+      /*const handleChange = (event, newAlignment) => {
             setAlignment(newAlignment);
+      };*/
+
+      const handleDimensionsChange = (event, newAlignment) => {
+            setDimensionsAlignment(newAlignment);
       };
+
 
       return(
             <div>
@@ -199,15 +204,27 @@ function VideoUploader(props){
                                     <br/>
 
                                     
-                                    <label className = {classes.boldFont}>Video Type:</label>
+                                    {/*<label className = {classes.boldFont}>Video Type:</label>
                                     <br/>
                                     <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleChange} value={alignment}>
                                           <ToggleButton value="180" aria-label="180 aligned">180 Degrees</ToggleButton>
                                           <ToggleButton value="360" aria-label="360 aligned">360 Degrees</ToggleButton>
                                     </ToggleButtonGroup>
+                                    <br/>
+                                    <br/>*/}
+                                    <label className = {classes.boldFont}>Video Dimensions:</label>
+                                    <br/>
+                                    <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleDimensionsChange} value={dimensionsAlignment}>
+                                          <ToggleButton value="720p" aria-label="720P aligned">720p</ToggleButton>
+                                          <ToggleButton value="1080p" aria-label="1080p aligned">1080p</ToggleButton>
+                                          <ToggleButton value="2K" aria-label="2K aligned">2K</ToggleButton>
+                                          <ToggleButton value="2060p" aria-label="2060p aligned">2060p</ToggleButton>
+                                          <ToggleButton value="4K" aria-label="4K aligned">4K</ToggleButton>
+                                          <ToggleButton value="5K" aria-label="5K aligned">5K</ToggleButton>
+                                    </ToggleButtonGroup>
                               </div>
                               <br/>
-                              <input type="file" onChange={(e) => setVideo(e.target.files[0])} />
+                              <input type="file" onChange={(e) => {setVideo(e.target.files[0]); }} />
                               <br/>
                               <button  className = {classes.uploadImg} onClick = {uploadingState? null:handleUpload}>Upload Selected Video</button>
                               <br/>

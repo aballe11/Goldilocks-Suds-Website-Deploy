@@ -1,15 +1,38 @@
 import classes from './FeedbackTable2.module.css';
 import _ from 'lodash';
 import {Button} from '@mui/material';
-import {React, useState} from 'react';
+import React, {useState} from 'react';
 import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
+import {
+      Chart as ChartJS,
+      CategoryScale,
+      LinearScale,
+      BarElement,
+      Title,
+      Tooltip,
+      Legend,
+    } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+//import faker from 'faker';
+    
+
+
 
 function FeedbackTable2(props) {
 
+      ChartJS.register(
+            CategoryScale,
+            LinearScale,
+            BarElement,
+            Title,
+            Tooltip,
+            Legend
+          );
       //###################################################################################### PREPARATION
 
       var arrayOfVideos = props.arrayOfVideos;
       var VideoTableEnabledArrayVideos = props.videoTableEnabledArray;    
+      console.log(VideoTableEnabledArrayVideos);
 
       var arrayOfTouchpoints = [];
       var tpTotal = '';
@@ -22,7 +45,9 @@ function FeedbackTable2(props) {
       const [insideVideoTitle, setInsideVideoTitle] = useState('');
       const [exportButton, setExportButton] = useState('');
       const [goBackButton, setGoBackButton] = useState('');
+      const [otherGoBackButton, setOtherGoBackButton] = useState('');
       const [touchpointTotal, setTouchpointTotal] = useState('')
+      const [chart, setChart] = useState("");
 
 
       function exportAllTouchpoints(){
@@ -174,8 +199,110 @@ function FeedbackTable2(props) {
                   rowsPerPageOptions={[20]}
               />); 
       }
+
+
+
+      const toTouchpointInformation = (params) => { 
+
+            setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
+                              Go Back
+                        </Button>);
+            setExportButton('');
+            setGoBackButton('');
+            setDataGrid("");
+
+            var touchpointArray = _.get(arrayOfTouchpoints, params.id);
+            var labels = []
+            var dataset = []
+            for(let i in touchpointArray){
+                  if(i !=="Alias" && i !=="Total" && i!== "Type"){
+                        if(touchpointArray.Type==="R10" || touchpointArray.Type==="R5") {
+                              var str = _.split(i, '_');
+                              str = _.slice(str, 0, 2);
+                              str = _.join(str, ' ');
+                              labels.push(str);
+
+                              dataset.push(touchpointArray[i]);
+                        } else {
+                              labels.push(i);
+                              dataset.push(touchpointArray[i]);
+                        }
+                  }
+            }
+
+            const options = {
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                    title: {
+                      display: true,
+                      text: touchpointArray.Alias + " Touchpoint",
+                    },
+                  },
+            };
+
+            const data = {
+                  labels,
+                  datasets: [
+                    {
+                      label: 'User Feedback',
+                      data: dataset,//labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+                      backgroundColor: 'rgba(11, 59, 172)',
+                    },
+                  ],
+                };
+
+
+            /*console.log(labels);
+            console.log(dataset);
+            const DATA_COUNT = labels.length;
+            const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: touchpointArray.Total};
+            //console.log(Utils.numbers(NUMBER_CFG));
+            
+            const data = {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: touchpointArray.Alias + 'Touchpoint',
+                      data: dataset,
+                      borderColor: 'rgb(11, 59, 172)',
+                      backgroundColor: 'rgb(255, 255, 255)',
+                    },
+                  ]
+                };
       
-      const touchpointInformationColumns: GridColDef[] = [
+            const config = {
+                  type: 'bar',
+                  data: data,
+                  options: {
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                      title: {
+                        display: true,
+                        text: `${"tpName"} Bar Chart`,
+                      }
+                    }
+                  },
+                };
+
+            const myChart = new Chart(
+                  document.getElementById('myChart'),
+                  config
+            );*/
+            const chartjs = <Bar options = {options} data = {data} />
+            
+            
+            setChart(chartjs);
+            
+      }
+
+
+      /*const touchpointInformationColumns: GridColDef[] = [
             {field: 'descriptor', headerName: 'Answer Descriptor', width: 346, headerAlign: 'center', align: 'center'},
             {field: 'value', headerName: 'Answers', width: 345, headerAlign: 'center', align: 'center'},
             {field: 'percentage', headerName: 'Percentage', width: 345, headerAlign: 'center', align: 'center'},
@@ -186,24 +313,18 @@ function FeedbackTable2(props) {
                               Go Back
                         </Button>);
             setExportButton('');
-            //console.log(params);
-            //console.log(arrayOfTouchpoints);
-            //console.log(touchpointID);
 
             var touchpointArray = _.get(arrayOfTouchpoints, params.id);
-            //const tpID = params.id - 1;
             videoTableEnabledArrayTP = [];
             var videoTableEnabledArrayTPunsorted = [];
-            //console.log(touchpointArray);
             const tpTotal = touchpointArray.Total;
             const tpAlias = touchpointArray.Alias;
             const tpType = touchpointArray.Type;
 
-
             setInsideVideoTitle(chosenVideoTitle + ' | ' + tpAlias + ' | ' + tpType);
             setTouchpointTotal('Total Responses: ' + tpTotal);
 
-            touchpointArray = _.omit(touchpointArray, ['Alias', /*'Title',*/ 'Total', /*'id',*/ 'Type']);
+            touchpointArray = _.omit(touchpointArray, ['Alias', 'Total', 'Type']);
             //console.log(touchpointArray);
 
             switch(tpType){
@@ -282,13 +403,15 @@ function FeedbackTable2(props) {
                   pageSize={20}
                   rowsPerPageOptions={[20]}
             />);
-      }
+      }*/
 
 
       //###################################################################################### BACK TO 2ND STAGE
 
       const backToVideoInformation = (params) => {
+            setChart("");
             setInsideVideoTitle(chosenVideoTitle);
+            setOtherGoBackButton('');
             setExportButton(
                   <Button variant="contained" size="large" onClick={exportAllTouchpoints}>
                       Export All
@@ -321,6 +444,12 @@ function FeedbackTable2(props) {
                 <h2 className= {classes.h2}> {insideVideoTitle}</h2>
                 <h2 className= {classes.h2}> {touchpointTotal}</h2>
                 <ul className = {classes.list}>
+                    <div>
+                        {chart}
+                        <br/>
+                        <br/>
+                        {otherGoBackButton}
+                    </div>
                     <div className = {classes.lowerDiv} >
                         {dataGrid}
                     </div>

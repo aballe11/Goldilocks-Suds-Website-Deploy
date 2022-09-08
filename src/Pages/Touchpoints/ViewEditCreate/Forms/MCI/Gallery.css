@@ -13,6 +13,7 @@
       cursor: pointer;
       margin-bottom: 5px;
       position: relative;
+      z-index: 0;
 }
 
 .gallery .pics:hover {
