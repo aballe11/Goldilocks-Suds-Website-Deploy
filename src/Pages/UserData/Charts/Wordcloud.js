@@ -1,13 +1,6 @@
-import React, {useState, useRef}  from 'react';
+import React from 'react';
 import _ from 'lodash';
-import { Button } from '@mui/material';
 import keyword_extractor from 'keyword-extractor';
-import {
-      Chart as ChartJS,
-      registerables
-    } from 'chart.js';
-import {WordCloudController, WordElement } from 'chartjs-chart-wordcloud';
-import { Chart } from 'react-chartjs-2';
 import { TagCloud } from 'react-tagcloud';
 
 
@@ -59,13 +52,9 @@ function Wordcloud(props){
             }
       }
 
-      console.log(wordCloudData);
-
-
-
       return(
             <div >
-                  <TagCloud disableRandomColor minSize={15} maxSize={50} tags={wordCloudData}/>
+                  <TagCloud disableRandomColor minSize={12} maxSize={40} tags={wordCloudData}/>
             </div>
       );
 

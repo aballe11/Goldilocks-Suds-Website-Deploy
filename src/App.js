@@ -8,7 +8,7 @@ import ImageUploader from './Pages/Touchpoints/ViewEditCreate/Forms/MCI/ImageUpl
 import EditVideo from './Pages/Media/VideoEditor/EditVideo';
 import TouchpointLibrary from './Pages/Touchpoints/TPLibrary/TouchpointLibrary';
 import ViewEditCreateTemplate from './Pages/Touchpoints/ViewEditCreate/ViewEditCreateTemplate';
-//App function 
+
 function App() {
 
     return (

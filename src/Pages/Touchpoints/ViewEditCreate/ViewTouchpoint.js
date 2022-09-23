@@ -7,27 +7,12 @@ import MCForm from './Forms/MC-Form';
 import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
 import {set, ref, remove, onValue} from 'firebase/database';
-//import _ from 'lodash';
 
 function ViewTouchpoint(){
-      /*const[touchpointIDs, setTouchpointIDs] = useState('');
 
-      useEffect(() => {
-            onValue(dbRef(db, `/TouchpointTemplateIDs` ), snapshot => {
-                  const tpIDs = snapshot.val();
-                  if(tpIDs !== null){
-                        setTouchpointIDs(tpIDs);
-                  };
-            });    
-      }, []);*/
-      
       function PushFirebaseTP(touchpointValues){
             set(ref(db, 'TouchpointTemplates/' + touchpointValues.UID), touchpointValues);
       }
-
-      /*function PushFirebaseTpIDs(StringIDs) {
-            set(ref(db, 'TouchpointTemplatesIDs/'), StringIDs);
-      }*/
 
       function DeleteFirebaseTP(uid){
             remove(ref(db, 'TouchpointTemplates/' + uid));

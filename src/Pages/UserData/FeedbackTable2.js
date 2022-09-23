@@ -1,5 +1,5 @@
 import classes from './FeedbackTable2.module.css';
-import _, { times } from 'lodash';
+import _ from 'lodash';
 import {Button} from '@mui/material';
 import React, {useState} from 'react';
 import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
@@ -192,11 +192,11 @@ function FeedbackTable2(props) {
       const toTouchpointInformation = (params) => { 
 
             let id = params.id;
-            console.log(id);
+            //console.log(id);
             setExportButton('');
             setGoBackButton('');
             setDataGrid("");
-            console.log(arrayOfTouchpoints);
+            //console.log(arrayOfTouchpoints);
             var touchpointArray = _.get(arrayOfTouchpoints, params.id);
 
             switch(touchpointArray.Type){
@@ -221,7 +221,6 @@ function FeedbackTable2(props) {
                 
                     var ffResponsesTableEnabledArray = [];
                     var wordcloudResponsesArray = [];
-                    console.log(touchpointArray.Responses);
                     for(let x in touchpointArray.Responses){
                         ffResponsesTableEnabledArray.push({
                             id: x,

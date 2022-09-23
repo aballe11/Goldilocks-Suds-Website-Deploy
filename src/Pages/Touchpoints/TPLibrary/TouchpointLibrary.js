@@ -1,4 +1,3 @@
-//import _ from 'lodash';
 import {React, useState, useEffect} from 'react';
 import TouchpointList from './TouchpointList';
 import {ref, onValue} from "firebase/database";

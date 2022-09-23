@@ -4,19 +4,16 @@ import {selectedVideoID} from '../MediaTable';
 import {db, storage} from '../../Firebase';
 import {ref as dbRef, onValue, remove, set, get} from "firebase/database";
 import {deleteObject, ref as srgRef} from "firebase/storage";
-import {ExistingTouchpoint} from './ExistingTouchpoint.js';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import '@videojs/themes/dist/sea/index.css';
-import _, { drop } from 'lodash';
+import _ from 'lodash';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {uid} from 'uid';
 import { Link } from 'react-router-dom';
-import { breadcrumbsClasses } from '@mui/material';
 
 
 function EditVideo(){
@@ -149,14 +146,9 @@ function EditVideo(){
             };
       }, [options, videoRef, playerRef])
 
-      //console.log(videoData.Touchpoints);
-
       var uniqueTemplateIDs = [];
       var arr = videoData.Touchpoints;
-      var dict = {};
       var arrayOfTemplatess = [];
-      console.log(arr);
-      
 
       for(let x in arr){
             var y =_.split(arr[x], '/');
@@ -165,16 +157,6 @@ function EditVideo(){
             arrayOfTemplatess.splice(z, 0, _.parseInt(y[0]));
             uniqueTemplateIDs.splice(z, 0, x);
       }
-
-      /*for(let x in arr){
-            var y = _.split(arr[x], '/');
-            var z = _.indexOf(arrayOfTemplatess, y[0]);
-
-            console.log('For ' + x + ' in second ' + y + ', fits at index ' + z);
-            uniqueTemplateIDs.splice(z, 0, x);
-            console.log(uniqueTemplateIDs);
-      }*/
-
 
       const [touchpoint, setTouchpoint] = useState(null);
       const [selectedTemplateName, setSelectedTemplateName] = useState(null);
@@ -202,8 +184,8 @@ function EditVideo(){
             var vidIDs = _.join(x, '/');
             set(dbRef(db, 'VideoIDs/'), vidIDs)
 
-            deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{console.log('Video Delete successful!')}).catch((error)=>{console.log(error)});
-            deleteObject(srgRef(storage, `Thumbnails/${thumbnailStorageName}` )).then(()=>{console.log('Thumbnail Delete successful!')}).catch((error)=>{console.log(error)});
+            deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{/*console.log('Video Delete successful!')*/}).catch((error)=>{console.log(error)});
+            deleteObject(srgRef(storage, `Thumbnails/${thumbnailStorageName}` )).then(()=>{/*console.log('Thumbnail Delete successful!')*/}).catch((error)=>{console.log(error)});
       }
 
       function addHandler(){
@@ -215,7 +197,7 @@ function EditVideo(){
             var uploadString = currentTime + '/' + uploadValue;
             var newTpID = uid();
             set(dbRef(db, `Videos/${selectedVideoID}/Touchpoints/${newTpID}`), uploadString);
-            console.log(tpTemplatesData);
+            //console.log(tpTemplatesData);
             var feedbackDict = {};
             switch(tpTemplatesData[uploadValue].Type){
                   case 'MCI':

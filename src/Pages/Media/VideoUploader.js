@@ -7,7 +7,7 @@ import classes from './VideoUploader.module.css';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import _ from 'lodash';
-import {/*generateVideoThumbnails, */getVideoDurationFromVideoFile, generateVideoThumbnails} from '@rajesh896/video-thumbnails-generator';
+import {getVideoDurationFromVideoFile} from '@rajesh896/video-thumbnails-generator';
 
 function VideoUploader(props){
 
@@ -61,10 +61,10 @@ function VideoUploader(props){
             e.preventDefault();
             videoAliasRef = document.getElementById("videoNameInputID").value;
             videoTitleRef = document.getElementById("videoTitleInputID").value;
-            console.log(videoAliasRef);
-            console.log(videoTitleRef);
-            console.log(video);
-            console.log(thumbnail);
+            //console.log(videoAliasRef);
+            //console.log(videoTitleRef);
+            //console.log(video);
+            //console.log(thumbnail);
 
             if(/*videoAliasRef !== "" && videoTitleRef !== "" && video !== null &&*/ thumbnail !== null) {
                   setUploadingState(true);
@@ -88,10 +88,9 @@ function VideoUploader(props){
                   uploadThumbnailTask.on(
                         "state_changed",
                         (err) => {console.log(err); setPromptText('Error. Check console for details.')},
-                        () => {console.log('Thumbnail uploaded successfully!')},
                         () => {
                               getDownloadURL(uploadThumbnailTask.snapshot.ref).then((url) => {
-                                    console.log('Thumbnail Download URL: ' + url);
+                                    //console.log('Thumbnail Download URL: ' + url);
                                     setThumbnailURL(url);
                               });
                         },
@@ -148,7 +147,7 @@ function VideoUploader(props){
             const videoFeedbackData = {
                   Count: 0,
                   'Date_(D-M-Y)': `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`,
-                  Status: 'Inactive',
+                  Active: false,
                   Title: videoTitleRef,
                   TotalResponses: 0,
                   Touchpoints: '',

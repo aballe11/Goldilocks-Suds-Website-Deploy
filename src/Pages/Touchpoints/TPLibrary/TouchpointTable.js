@@ -45,7 +45,6 @@ function TouchpointTable(props){
 
       function templateArrayHandler(params){
             arrayOfTemplates = _.get(arrayOfTemplates, [params.id]);
-            console.log(arrayOfTemplates);
             view = true;
             duplicate = false;
       }

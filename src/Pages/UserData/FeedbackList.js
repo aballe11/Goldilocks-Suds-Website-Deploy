@@ -23,8 +23,8 @@ function FeedbackList(props){
             'Status': status,
         })
     }
-    console.log(videoTableEnabledArray);
-    console.log(arrayOfVideos);
+    //console.log(videoTableEnabledArray);
+    //console.log(arrayOfVideos);
 
     return (    
                 /*<FeedbackTable 
