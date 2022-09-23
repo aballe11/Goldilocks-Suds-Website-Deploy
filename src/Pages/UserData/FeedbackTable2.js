@@ -1,38 +1,20 @@
 import classes from './FeedbackTable2.module.css';
-import _ from 'lodash';
+import _, { times } from 'lodash';
 import {Button} from '@mui/material';
 import React, {useState} from 'react';
 import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
-import {
-      Chart as ChartJS,
-      CategoryScale,
-      LinearScale,
-      BarElement,
-      Title,
-      Tooltip,
-      Legend,
-    } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import PieChart from './Charts/PieChart';
+import BarChart from './Charts/BarChart';
+import Wordcloud from './Charts/Wordcloud';
 //import faker from 'faker';
-    
-
-
 
 function FeedbackTable2(props) {
-
-      ChartJS.register(
-            CategoryScale,
-            LinearScale,
-            BarElement,
-            Title,
-            Tooltip,
-            Legend
-          );
       //###################################################################################### PREPARATION
 
       var arrayOfVideos = props.arrayOfVideos;
       var VideoTableEnabledArrayVideos = props.videoTableEnabledArray;    
-      console.log(VideoTableEnabledArrayVideos);
+      
+      VideoTableEnabledArrayVideos = _.sortBy(VideoTableEnabledArrayVideos, ['Date', 'Title', 'Status'], ['asc', 'desc', 'desc']);
 
       var arrayOfTouchpoints = [];
       var tpTotal = '';
@@ -48,7 +30,8 @@ function FeedbackTable2(props) {
       const [otherGoBackButton, setOtherGoBackButton] = useState('');
       const [touchpointTotal, setTouchpointTotal] = useState('')
       const [chart, setChart] = useState("");
-
+      const [chart2, setChart2] = useState("");
+      const [chart3, setChart3] = useState("");
 
       function exportAllTouchpoints(){
             const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -56,7 +39,7 @@ function FeedbackTable2(props) {
               )}`;
               const link = document.createElement("a");
               link.href = jsonString;
-              link.download = (videoID+" _ User Feeedback Data.json");
+              link.download = (videoID + " _ User Feeedback Data.json");
           
               link.click();
       }    
@@ -82,6 +65,7 @@ function FeedbackTable2(props) {
             disableSelectionOnClick = {true}
             components={{ Toolbar: GridToolbar }}
             rows={VideoTableEnabledArrayVideos}
+            disableDensitySelector
             columns={allVideosColumns}
             pageSize={20}
             rowsPerPageOptions={[20]}
@@ -90,9 +74,10 @@ function FeedbackTable2(props) {
       //###################################################################################### 2ND STAGE
 
       const videoInformationColumns: GridColDef[] = [
-            { field: 'count', headerName: 'Touchpoint #', width: 150, headerAlign: 'center', align: 'center', },
-            { field: 'Alias', headerName: 'Alias', width: 350, headerAlign: 'center', align: 'center', },
-            { field: 'Type', headerName: 'Touchpoint Type', width: 350, headerAlign: 'center', align: 'center', /*type: 'number',*/ },
+            { field: 'id', headerName: 'ID', width: 125, headerAlign: 'center', align: 'center', },
+            { field: 'Alias', headerName: 'Alias', width: 300, headerAlign: 'center', align: 'center', },
+            { field: 'Type', headerName: 'Touchpoint Type', width: 275, headerAlign: 'center', align: 'center',},
+            { field: 'Time', headerName: 'Time Shown', width: 150, headerAlign: 'center', align: 'center',},
             { field: 'btn', headerName: 'Actions', renderCell: (params) => ( <strong> <Button variant="contained" size="small" 
                 onClick={()=>toTouchpointInformation(params)}> VIEW </Button> </strong> ),
               width: 180, headerAlign: 'center', align: 'center', },         
@@ -132,19 +117,19 @@ function FeedbackTable2(props) {
             arrayOfTouchpoints = _.get(arrayOfVideos, [videoID, 'Touchpoints']);
             //console.log(arrayOfTouchpoints);
 
-            var count = 1;
             for(let x in arrayOfTouchpoints){
-                  //console.log(arrayOfTouchpoints[x]);
                   //console.log(x);
                   const alias = arrayOfTouchpoints[x].Alias;
                   const total = arrayOfTouchpoints[x].Total;
+                  const time = new Date(arrayOfTouchpoints[x].Time * 1000).toISOString().slice(14, 19);
+
                   var type = '';
                   
-
+                
                   switch(arrayOfTouchpoints[x].Type){
-                        case 'R10': type = '10-Based Rating'; 
+                        case 'R10': type = '10-Point Rating'; 
                             break;
-                        case 'R5': type =  '5-Based Rating';
+                        case 'R5': type =  '5-Point Rating';
                             break;
                         case 'MCI': type =  'Multiple Choice w/ Images';
                             break;
@@ -154,16 +139,16 @@ function FeedbackTable2(props) {
                             break; 
                         default:
                             break; 
-                    }
-
+                  }
                   videoTableEnabledArrayTouchpoints.push({
-                        'count': count,
                         'Alias': alias,
                         'Type': type,
+                        'Time': time,
                         'id': x,
                   });
-                  count++;
             }
+            videoTableEnabledArrayTouchpoints = _.sortBy(videoTableEnabledArrayTouchpoints, ['Time', 'Type', 'Alias'], ['desc', 'asc', 'asc'])
+
             //console.log("Array of Touchpoints: ");
             //console.log(arrayOfTouchpoints);
 
@@ -174,6 +159,7 @@ function FeedbackTable2(props) {
                   components={{ Toolbar: GridToolbar }}
                   rows={videoTableEnabledArrayTouchpoints}
                   columns={videoInformationColumns}
+                  disableDensitySelector
                   pageSize={20}
                   rowsPerPageOptions={[20]}
             />);
@@ -195,6 +181,7 @@ function FeedbackTable2(props) {
                   components={{ Toolbar: GridToolbar }}
                   rows={VideoTableEnabledArrayVideos}
                   columns={allVideosColumns}
+                  disableDensitySelector
                   pageSize={20}
                   rowsPerPageOptions={[20]}
               />); 
@@ -204,212 +191,85 @@ function FeedbackTable2(props) {
 
       const toTouchpointInformation = (params) => { 
 
-            setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
-                              Go Back
-                        </Button>);
+            let id = params.id;
+            console.log(id);
             setExportButton('');
             setGoBackButton('');
             setDataGrid("");
-
+            console.log(arrayOfTouchpoints);
             var touchpointArray = _.get(arrayOfTouchpoints, params.id);
-            var labels = []
-            var dataset = []
-            for(let i in touchpointArray){
-                  if(i !=="Alias" && i !=="Total" && i!== "Type"){
-                        if(touchpointArray.Type==="R10" || touchpointArray.Type==="R5") {
-                              var str = _.split(i, '_');
-                              str = _.slice(str, 0, 2);
-                              str = _.join(str, ' ');
-                              labels.push(str);
 
-                              dataset.push(touchpointArray[i]);
-                        } else {
-                              labels.push(i);
-                              dataset.push(touchpointArray[i]);
-                        }
-                  }
-            }
+            switch(touchpointArray.Type){
+                case "R10":
+                case "MC":
+                case "R5":
+                case "MCI":
 
-            const options = {
-                  responsive: true,
-                  plugins: {
-                    legend: {
-                      position: 'top',
-                    },
-                    title: {
-                      display: true,
-                      text: touchpointArray.Alias + " Touchpoint",
-                    },
-                  },
-            };
+                    setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
+                        Go Back
+                    </Button>);
+                    setGoBackButton('');
+                    setChart(<div><BarChart tpId = {id} touchpointArray = {touchpointArray} title={chosenVideoTitle} /> <br/></div>);
+                    setChart2(<div><PieChart tpId = {id} touchpointArray = {touchpointArray} title={chosenVideoTitle} /> <br/></div>);
+                    break;
+                case "FF":
 
-            const data = {
-                  labels,
-                  datasets: [
-                    {
-                      label: 'User Feedback',
-                      data: dataset,//labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-                      backgroundColor: 'rgba(11, 59, 172)',
-                    },
-                  ],
-                };
+                    setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
+                        Go Back
+                    </Button>);
+                     setGoBackButton('');
+                
+                    var ffResponsesTableEnabledArray = [];
+                    var wordcloudResponsesArray = [];
+                    console.log(touchpointArray.Responses);
+                    for(let x in touchpointArray.Responses){
+                        ffResponsesTableEnabledArray.push({
+                            id: x,
+                            Email: touchpointArray.Responses[x].Email,
+                            DateTime: touchpointArray.Responses[x].DateTime,
+                            Response: touchpointArray.Responses[x].Response,
+                        });
 
-
-            /*console.log(labels);
-            console.log(dataset);
-            const DATA_COUNT = labels.length;
-            const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: touchpointArray.Total};
-            //console.log(Utils.numbers(NUMBER_CFG));
-            
-            const data = {
-                  labels: labels,
-                  datasets: [
-                    {
-                      label: touchpointArray.Alias + 'Touchpoint',
-                      data: dataset,
-                      borderColor: 'rgb(11, 59, 172)',
-                      backgroundColor: 'rgb(255, 255, 255)',
-                    },
-                  ]
-                };
-      
-            const config = {
-                  type: 'bar',
-                  data: data,
-                  options: {
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        position: 'top',
-                      },
-                      title: {
-                        display: true,
-                        text: `${"tpName"} Bar Chart`,
-                      }
+                        wordcloudResponsesArray.push(touchpointArray.Responses[x].Response);
                     }
-                  },
-                };
+                    
+                    const FFcommentsColumns: GridColDef[] = [
+                        { field: 'id', headerName: 'User ID', width: 280, headerAlign: 'center', align: 'center',},
+                        { field: 'Email', headerName: 'User Email', width: 170, headerAlign: 'center', align: 'center',},
+                        { field: 'DateTime', headerName: 'Date & Time', width: 170, headerAlign: 'center', align: 'center',},
+                        { field: 'Response', headerName: 'Answer', width: 410, headerAlign: 'center', align: 'center',},
+                    ];
 
-            const myChart = new Chart(
-                  document.getElementById('myChart'),
-                  config
-            );*/
-            const chartjs = <Bar options = {options} data = {data} />
-            
-            
-            setChart(chartjs);
-            
+                    setDataGrid(<DataGrid
+                        sx={{
+                            border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
+                            '&.MuiDataGrid-toolbarContainer': { padding: 200 },'.MuiDataGrid-sortIcon': { color: 'rgba(255, 255, 255, 1)', }, 
+                            '&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell': { py: '15px' },
+                        }}          
+                        disableSelectionOnClick = {true}
+                        components={{ Toolbar: GridToolbar }}
+                        rows={ffResponsesTableEnabledArray}
+                        columns={FFcommentsColumns}
+                        pageSize={20}
+                        disableDensitySelector
+                        rowsPerPageOptions={[20]}
+                        getRowHeight={()=> 'auto'}
+                        getEstimatedRowHeight={() => 200}
+                    />); 
+
+                    setChart3(<div><h3>Word Cloud: </h3><br/><Wordcloud responsesArray = {wordcloudResponsesArray}/></div>);
+                    break;
+                default:
+                    break;
+            }
       }
-
-
-      /*const touchpointInformationColumns: GridColDef[] = [
-            {field: 'descriptor', headerName: 'Answer Descriptor', width: 346, headerAlign: 'center', align: 'center'},
-            {field: 'value', headerName: 'Answers', width: 345, headerAlign: 'center', align: 'center'},
-            {field: 'percentage', headerName: 'Percentage', width: 345, headerAlign: 'center', align: 'center'},
-      ];
-
-      const toTouchpointInformation = (params) => {
-            setGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
-                              Go Back
-                        </Button>);
-            setExportButton('');
-
-            var touchpointArray = _.get(arrayOfTouchpoints, params.id);
-            videoTableEnabledArrayTP = [];
-            var videoTableEnabledArrayTPunsorted = [];
-            const tpTotal = touchpointArray.Total;
-            const tpAlias = touchpointArray.Alias;
-            const tpType = touchpointArray.Type;
-
-            setInsideVideoTitle(chosenVideoTitle + ' | ' + tpAlias + ' | ' + tpType);
-            setTouchpointTotal('Total Responses: ' + tpTotal);
-
-            touchpointArray = _.omit(touchpointArray, ['Alias', 'Total', 'Type']);
-            //console.log(touchpointArray);
-
-            switch(tpType){
-                  case 'R10':
-                  case 'R5':
-                  case 'MC':
-
-                        for(let answer in touchpointArray){
-                              var descriptor = ((answer).split('_'));
-                              var number = descriptor[2];
-                              descriptor = _.slice(descriptor, 0, 2);
-                              descriptor = _.join(descriptor, ' ');
-                              var value = _.parseInt(touchpointArray[answer]);
-                              var percentage = 0;
-                              if(tpTotal !== 0){
-                                    percentage = (_.round(( (value/tpTotal) * 100), 2));
-                              }  
-                              percentage = percentage + '%';
-            
-                              videoTableEnabledArrayTPunsorted.push({
-                                    'descriptor': descriptor,
-                                    'value': value,
-                                    'percentage': percentage,
-                                    'id': number,
-                              });
-                              
-                        }
-                        //console.log(videoTableEnabledArrayTPunsorted);
-                        
-                        for(let i = 0; i <= videoTableEnabledArrayTPunsorted.length; i++){
-                              for(let x in videoTableEnabledArrayTPunsorted){
-                                    if(videoTableEnabledArrayTPunsorted[x].id == i+1){
-                                          videoTableEnabledArrayTP.push(videoTableEnabledArrayTPunsorted[x]);
-                                    }
-                              }
-                        }    
-                        //console.log(videoTableEnabledArrayTP);
-
-
-
-                        break;
-                  case 'MCI':
-                  case 'FF':
-                        var count4 = 1;
-                        for(let answer in touchpointArray){
-                              var value = _.parseInt(touchpointArray[answer]);
-                              var percentage = 0;
-                              if(tpTotal !== 0){
-                                    percentage = (_.round(( (value/tpTotal) * 100), 2));
-                              }  
-                              percentage = percentage + '%';
-            
-                              videoTableEnabledArrayTP.push({
-                                    'descriptor': answer,
-                                    'value': value,
-                                    'percentage': percentage,
-                                    'id': count4,
-                              });
-                              count4++;
-                              
-                        }
-                        break;
-                  default:
-                      break; 
-              }
-
-            //console.log(videoTableEnabledArrayTP);
-
-            setDataGrid(<DataGrid
-                  sx={{ border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
-                      '&.MuiDataGrid-toolbarContainer': { padding: 200 }, '.MuiDataGrid-sortIcon': { color: 'rgba(255, 255, 255, 1)', } }}
-                  disableSelectionOnClick = {true}
-                  components={{ Toolbar: GridToolbar }}
-                  rows={videoTableEnabledArrayTP}
-                  columns={touchpointInformationColumns}
-                  pageSize={20}
-                  rowsPerPageOptions={[20]}
-            />);
-      }*/
-
 
       //###################################################################################### BACK TO 2ND STAGE
 
       const backToVideoInformation = (params) => {
             setChart("");
+            setChart2("");
+            setChart3("");
             setInsideVideoTitle(chosenVideoTitle);
             setOtherGoBackButton('');
             setExportButton(
@@ -430,6 +290,8 @@ function FeedbackTable2(props) {
                   rows={videoTableEnabledArrayTouchpoints}
                   columns={videoInformationColumns}
                   pageSize={20}
+                  disableDensitySelector
+                  getRowHeight={()=> 52}
                   rowsPerPageOptions={[20]}
                   getRowId={(row) => row.id}
               />);
@@ -445,14 +307,17 @@ function FeedbackTable2(props) {
                 <h2 className= {classes.h2}> {touchpointTotal}</h2>
                 <ul className = {classes.list}>
                     <div>
-                        {chart}
-                        <br/>
                         <br/>
                         {otherGoBackButton}
+                        <br/>
+                        {chart}
+                        {chart2}
                     </div>
                     <div className = {classes.lowerDiv} >
                         {dataGrid}
                     </div>
+                    <br/>
+                    {chart3}
                     <div>
                         {exportButton} {goBackButton}
                     </div>

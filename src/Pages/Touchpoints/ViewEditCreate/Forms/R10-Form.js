@@ -16,7 +16,7 @@ function R10Form(props) {
     var minimumOptionDefaultValue = '';
     var maximumOptionDefaultValue = '';
     var duplicateAliasPrompt = '';
-    var titleDefaultValue = '10-Based Rating';
+    var titleDefaultValue = '10-Point Rating';
 
     if (props.view === true || props.duplicate === true) {
 
@@ -27,7 +27,7 @@ function R10Form(props) {
     } 
     
     if(props.duplicate === true){
-        titleDefaultValue = '10-Based Rating - Duplicate';
+        titleDefaultValue = '10-Point Rating - Duplicate';
         duplicateAliasPrompt = '(Make sure to change the duplicate\'s alias!)';
     }
 
@@ -68,28 +68,25 @@ function R10Form(props) {
         <div>
             <h2 className={classes.h2}>{titleDefaultValue}</h2>
             <h3 className={classes.h3}>
-                In this touchpoint type, the user will be prompted a close ended question,
-                and will be allowed to evaluate it in a 1 to 10 rating scale.
+                In this touchpoint, the user will be prompted with a close-ended question. The user will respond by selectiong a point on a ten-point Likert scale.
             </h3>
             <br></br>
             <form className={classes.form} /*onSubmit = {SummitHandler}*/>
                 <div className={classes.control}>
-                    <label htmlFor='alias'>Alias used to recognize the touchpoint template:</label>
+                    <label htmlFor='alias'>Touchpoint Template Name (or Alias):</label>
                     <label className={classes.label}>{duplicateAliasPrompt}</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointAlias} defaultValue={aliasDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='prompt'>Question prompted to user:</label>
+                    <label htmlFor='prompt'>Question displayed to user:</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='maximumOption'>Maximum Evaluation. Corresponds to number 10 in the 1-10 rating scale.</label>
-                    <label>E.g. 'Ideal', 'Excellent', 'Completely Agree', etc.: </label>
+                    <label htmlFor='maximumOption'>Left side point label: </label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointMaximumOption} defaultValue={maximumOptionDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='minimumOption'>Minimum Evaluation. Corresponds to number 1 in the 1-10 rating scale.</label>
-                    <label>E.g. 'Not Ideal', 'Very Poor', 'Completely Disagree', etc.: </label>
+                    <label htmlFor='minimumOption'>Right side point label: </label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointMinimumOption} defaultValue={minimumOptionDefaultValue} fullWidth />
                 </div>
 

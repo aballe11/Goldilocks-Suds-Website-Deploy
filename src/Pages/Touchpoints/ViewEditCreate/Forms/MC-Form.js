@@ -77,18 +77,17 @@ function MCForm(props) {
         <div>
             <h2 className={classes.h2}>{titleDefaultValue}</h2>
             <h3 className={classes.h3}>
-                In this touchpoint type, the user will be prompted a close-ended question,
-                and will be given 4 answer options to choose from.
+                In this touchpoint type, the user will be prompted with a close-ended question. The user can select from four answer options.
             </h3>
             <br></br>
             <form className={classes.form}>
                 <div className={classes.control}>
-                    <label htmlFor='alias'>Alias used to recognize the touchpoint template:</label>
+                    <label htmlFor='alias'>Touchpoint Template Name (or Alias): </label>
                     <label className={classes.label}>{duplicateAliasPrompt}</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointAlias} defaultValue={aliasDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='prompt'>Question prompted to user:</label>
+                    <label htmlFor='prompt'>Question displayed to user:</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>

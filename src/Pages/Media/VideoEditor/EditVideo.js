@@ -36,6 +36,7 @@ function EditVideo(){
       const [storageName, setStorageName] = useState('');
       const [touchpointCount, setTouchpointCount] = useState(0);
       const [videoName, setVideoName] = useState('');
+      const [thumbnailStorageName, setThumbnailStorageName] = useState('');
        
       
 
@@ -56,6 +57,15 @@ function EditVideo(){
                   const strgName = snapshot.val();
                   if(strgName !== null){
                         setStorageName(strgName);
+                  };
+            });    
+      }, []);
+
+      useEffect(() => {
+            onValue(dbRef(db, `/Videos/${selectedVideoID}/ThumbnailStorageName` ), snapshot => {
+                  const thmbStrgName = snapshot.val();
+                  if(thmbStrgName !== null){
+                        setThumbnailStorageName(thmbStrgName);
                   };
             });    
       }, []);
@@ -102,8 +112,8 @@ function EditVideo(){
       }, []);
       
       const types = {
-            R10: '10-Based Rating',
-            R5: '5-Based Rating', 
+            R10: '10-Point Rating',
+            R5: '5-Point Rating', 
             MCI: 'Multiple Choice w/ Images',
             MC: 'Multiple Choice',
             FF: 'Freeform Input',
@@ -192,7 +202,8 @@ function EditVideo(){
             var vidIDs = _.join(x, '/');
             set(dbRef(db, 'VideoIDs/'), vidIDs)
 
-            deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{console.log('Delete successful!')}).catch((error)=>{console.log(error)});
+            deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{console.log('Video Delete successful!')}).catch((error)=>{console.log(error)});
+            deleteObject(srgRef(storage, `Thumbnails/${thumbnailStorageName}` )).then(()=>{console.log('Thumbnail Delete successful!')}).catch((error)=>{console.log(error)});
       }
 
       function addHandler(){
@@ -209,7 +220,7 @@ function EditVideo(){
             switch(tpTemplatesData[uploadValue].Type){
                   case 'MCI':
                         feedbackDict['Total'] = 0; feedbackDict ['Type'] = 'MCI'; feedbackDict['Alias'] = tpTemplatesData[uploadValue].Alias;
-                        var images = _.split(tpTemplatesData[uploadValue].ImageNames, '/');
+                        var images = _.split(tpTemplatesData[uploadValue].ImageNames, '/'); feedbackDict['Time'] = currentTime;
                         for(let x in images){
                               feedbackDict[images[x]] = 0;
                         }
@@ -218,24 +229,24 @@ function EditVideo(){
                   case 'MC':
                         feedbackDict = {
                               Option_1_1: 0, Option_2_2: 0, Option_3_3: 0, Option_4_4: 0, Total: 0, 
-                              Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias,
+                              Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
                         };
                         break;
                   case 'FF':
                         feedbackDict = {
-                              Responses: "", Total: 0, Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias,
+                              Responses: "", Total: 0, Type: 'FF', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
                         };
                         break;
                   case 'R10':
                         feedbackDict = {
                               Option_1_1: 0, Option_2_2: 0,Option_3_3: 0, Option_4_4: 0, Option_5_5: 0, Option_6_6: 0, Option_7_7: 0, Option_8_8: 0, 
-                              Option_9_9: 0, Option_10_10: 0, Total: 0, Type: 'R10', Alias: tpTemplatesData[uploadValue].Alias,
+                              Option_9_9: 0, Option_10_10: 0, Total: 0, Type: 'R10', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
                         };
                         break;
                   case 'R5':
                         feedbackDict = {
                               'Option_-2_1': 0, 'Option_-1_2': 0, Option_0_3: 0, Option_1_4: 0,
-                              Option_2_5: 0, Total: 0, Type: 'R5', Alias: tpTemplatesData[uploadValue].Alias,
+                              Option_2_5: 0, Total: 0, Type: 'R5', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
                         };
                         break;
             }

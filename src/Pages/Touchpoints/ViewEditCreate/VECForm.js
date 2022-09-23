@@ -78,8 +78,8 @@ function VECForm(props){
                     <DropdownItem header>Select...</DropdownItem>
                     <DropdownItem divider/>
 
-                    <DropdownItem  onClick={()=>handleType("R10")}  >10-Based Rating</DropdownItem>
-                    <DropdownItem  onClick={()=>handleType("R5")}   >5-Based Rating</DropdownItem>
+                    <DropdownItem  onClick={()=>handleType("R10")}  >10-Point Rating</DropdownItem>
+                    <DropdownItem  onClick={()=>handleType("R5")}   >5-Point Rating</DropdownItem>
                     <DropdownItem  onClick={()=>handleType("FF")}   >Freeform Input</DropdownItem>
                     <DropdownItem  onClick={()=>handleType("MC")}   >Multiple Choice</DropdownItem>
                     <DropdownItem  onClick={()=>handleType("MCI")}  >Multiple Choice w/ Images</DropdownItem>

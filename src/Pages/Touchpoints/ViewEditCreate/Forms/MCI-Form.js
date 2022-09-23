@@ -106,18 +106,17 @@ function MCIForm(props) {
         <div>
             <h2 className={classes.h2}>{titleDefaultValue}</h2>
             <h3 className={classes.h3}>
-                In this touchpoint type, the user will be prompted an open-ended question and will be
-                allowed to answer it by selecting from multiple images.
+                In this touchpoint type, the user will be prompted with an open-ended question. The user will respond by selecting a corresponding image from multiple image options.
             </h3>
             <br></br>
             <form className={classes.form}>
                 <div className={classes.control}>
-                    <label htmlFor='alias'>Alias used to recognize the touchpoint template:</label>
+                    <label htmlFor='alias'>Touchpoint Template Name (or Alias):</label>
                     <label className={classes.label}>{duplicateAliasPrompt}</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointAlias} defaultValue={aliasDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='prompt'>Question prompted to user:</label>
+                    <label htmlFor='prompt'>Question displayed to user:</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
             </form>

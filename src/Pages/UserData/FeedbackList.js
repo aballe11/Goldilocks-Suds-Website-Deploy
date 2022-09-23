@@ -1,6 +1,3 @@
-import classes from './FeedbackItem.module.css';
-import FeedbackItem from './FeedbackItem';
-import FeedbackTable from './FeedbackTable';
 import FeedbackTable2 from './FeedbackTable2';
 import _ from 'lodash';
 
@@ -26,8 +23,8 @@ function FeedbackList(props){
             'Status': status,
         })
     }
-    //console.log(videoTableEnabledArray);
-    //console.log(arrayOfVideos);
+    console.log(videoTableEnabledArray);
+    console.log(arrayOfVideos);
 
     return (    
                 /*<FeedbackTable 

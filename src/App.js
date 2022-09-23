@@ -1,20 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './Components/Layout/Layout';
 import Home from './Pages/Home';
-import Touchpoints from './Pages/Touchpoints/Touchpoints';
 import Media from './Pages/Media/Media';
 import UserData from './Pages/UserData/UserData';
 import ViewTouchpoint from './Pages/Touchpoints/ViewEditCreate/ViewTouchpoint';
 import ImageUploader from './Pages/Touchpoints/ViewEditCreate/Forms/MCI/ImageUploader'
 import EditVideo from './Pages/Media/VideoEditor/EditVideo';
-
 import TouchpointLibrary from './Pages/Touchpoints/TPLibrary/TouchpointLibrary';
 import ViewEditCreateTemplate from './Pages/Touchpoints/ViewEditCreate/ViewEditCreateTemplate';
-
+//App function 
 function App() {
 
-  return (
+    return (
     <div >
+      
       <Layout>
         <Routes>
           <Route path='/Goldilocks-Suds-Website-Deploy' element={<Home />} />
@@ -27,6 +26,7 @@ function App() {
 
           <Route path='/Goldilocks-Suds-Website-Deploy/media' element={<Media />} />
           <Route path='/Goldilocks-Suds-Website-Deploy/media/edit-video' element={<EditVideo />} />
+
           <Route path='/Goldilocks-Suds-Website-Deploy/user-data' element={<UserData />} />
           
         </Routes>

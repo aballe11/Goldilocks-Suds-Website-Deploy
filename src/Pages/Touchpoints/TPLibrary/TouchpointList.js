@@ -15,9 +15,9 @@ function TouchpointList(props){
             const TimesUsed = _.get(arrayOfTemplates[v], ['TimesUsed']);
             var Type = _.get(arrayOfTemplates[v], ['Type']);
             switch(Type){
-                  case 'R10': Type = '10-Based Rating'; 
+                  case 'R10': Type = '10-Point Rating'; 
                       break;
-                  case 'R5': Type = '5-Based Rating';
+                  case 'R5': Type = '5-Point Rating';
                       break;
                   case 'MCI': Type = 'Multiple Choice w/ Images';
                       break;

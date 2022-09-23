@@ -18,7 +18,7 @@ function R5Form(props) {
     var rightOptionDefaultValue = '';
     var centerOptionDefaultValue = '';
     var duplicateAliasPrompt = '';
-    var titleDefaultValue = '5-Based Rating';
+    var titleDefaultValue = '5-Point Rating';
 
     if (props.view === true || props.duplicate ===true) {
         aliasDefaultValue = props.arrayOfTemplates.Alias;
@@ -28,7 +28,7 @@ function R5Form(props) {
         rightOptionDefaultValue = props.arrayOfTemplates.RightOption;
     }
     if(props.duplicate === true){
-        titleDefaultValue = '5-Based Rating - Duplicate';
+        titleDefaultValue = '5-Point Rating - Duplicate';
         duplicateAliasPrompt = '(Make sure to change the duplicate\'s alias!)';
     }
 
@@ -73,32 +73,32 @@ function R5Form(props) {
         <div>
             <h2 className={classes.h2}>{titleDefaultValue}</h2>
             <h3 className={classes.h3}>
-                In this touchpoint type, the user will be prompted a close ended question,
-                and will be allowed to evaluate it in a -2 to 2 rating scale.
+                In this touchpoint, the user will be prompted a close ended question.
+                The user will respond by selecting a point on a five-point Likert scale.
             </h3>
             <br></br>
             <form className={classes.form}>
                 <div className={classes.control}>
-                    <label htmlFor='alias'>Alias used to recognize the touchpoint template:</label>
+                    <label htmlFor='alias'>Touchpoint Template Name (or Alias):</label>
                     <label className={classes.label}>{duplicateAliasPrompt}</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointAlias} defaultValue={aliasDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='prompt'>Question prompted to user:</label>
+                    <label htmlFor='prompt'>Question displayed to user:</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointPrompt} defaultValue={promptDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='leftOption'>Leftest Evaluation. Corresponds to number -2 in the -2 to 2 rating scale.</label>
+                    <label htmlFor='leftOption'>Left side point label (e.g. Strongly Disagree):</label>
                     <label>E.g. 'Completely Disagree':</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointLeftOption} defaultValue={leftOptionDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='centerOption'>Middle Evaluation. Corresponds to number 0 in the -2 to 2 rating scale.</label>
+                    <label htmlFor='centerOption'>Central point label (e.g. Neither agree nor disagree):</label>
                     <label>E.g. 'Neutral':</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointCenterOption} defaultValue={centerOptionDefaultValue} fullWidth />
                 </div>
                 <div className={classes.control}>
-                    <label htmlFor='rightOption'>Rightest Evaluation. Corresponds to number 2 in the -2 to 2 rating scale.</label>
+                    <label htmlFor='rightOption'>Right side point label (e.g. Strongly Agree):</label>
                     <label>E.g. 'Completely Agree':</label>
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointRightOption} defaultValue={rightOptionDefaultValue} fullWidth />
                 </div>
