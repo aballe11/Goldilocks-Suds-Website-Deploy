@@ -8,6 +8,7 @@ import {
 import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+//Function that generates a Pie Chart image exportable as .pgn & .json
 function PieChart(props){
       ChartJS.register(
             ...registerables,
@@ -25,7 +26,6 @@ function PieChart(props){
       let piechartRef = useRef(null);
 
       touchpointArray = _.omit(touchpointArray, 'Alias', 'Total', 'Type', 'Time');
-      //touchpointArray = _.sortBy(touchpointArray, ['Time', 'Type', 'Alias'], ['desc', 'asc', 'asc'])
 
       for(let i in touchpointArray){
             if(type==="R10" || type==="R5") {
@@ -39,9 +39,17 @@ function PieChart(props){
                   dataset.push(touchpointArray[i]);
             }
       }
-
-      labels.push(labels.shift());
-      dataset.push(dataset.shift());
+      if(type === "R10"){
+            labels.push(labels.shift());
+            dataset.push(dataset.shift());
+      } else if (type === "R5"){
+            const tempLbl = labels[0];
+            const tempNo = dataset[0];
+            labels[0] = labels[1];
+            dataset[0] = dataset[1];
+            labels[1] = tempLbl;
+            dataset[1] = tempNo;
+      }
 
       const options = {
             responsive: true,
@@ -51,7 +59,7 @@ function PieChart(props){
               },
               title: {
                 display: true,
-                text: "Video: " + props.title + " | Touchpoint: " + alias + " | Time: " + time + " | Total Responses: " + total + " | ID: " + props.tpId,
+                text: "Video: " + props.alias + " | Touchpoint: " + alias + " | Time: " + time + " | Total Responses: " + total + " | ID: " + props.tpId,
                 font: {
                   size: 15,
                   weight: 'bold',
@@ -106,10 +114,22 @@ function PieChart(props){
           };
 
 
-      function exportPieChart(){
+      function exportPieChartPng(){
             const link = document.createElement("a");
             link.download = props.tpId + "_Touchpoint_PieChart.png";
             link.href =  piechartRef.current.toBase64Image();
+            link.click();
+      }
+
+      function exportPieChartJson(){
+            const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+                  JSON.stringify(touchpointArray)
+            )}`;
+            
+            const link = document.createElement("a");
+            link.href = jsonString;     
+            link.download = (props.title+"-"+ props.tpId + ".json");
+            
             link.click();
       }
 
@@ -126,12 +146,16 @@ function PieChart(props){
             <div>
                   <Pie ref={piechartRef} options = {options} data = {data} />
                   <br/>
-                  <Button variant="contained" size="small" onClick={exportPieChart}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={exportPieChartPng}>
                         Export Pie Chart
                   </Button>
                   &emsp;&emsp;
-                  <Button variant="contained" size="small" onClick={labelHandler}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={labelHandler}>
                         Toggle Labels
+                  </Button>
+                  &emsp;&emsp;
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={exportPieChartJson}>
+                        Export .json
                   </Button>
             </div>
       );

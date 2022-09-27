@@ -3,21 +3,12 @@ import _ from 'lodash';
 import keyword_extractor from 'keyword-extractor';
 import { TagCloud } from 'react-tagcloud';
 
-
-
-
+//Function that creates a very simple Wordcloud.
 function Wordcloud(props){
-
-      var wordCloudData = [];
       
-      /*ChartJS.register(
-            ...registerables,
-            WordCloudController,
-            WordElement,
-      );*/
-
+      //Data preparation.
+      var wordCloudData = [];
       for(var i in props.responsesArray){
-            
             var extraction_result = keyword_extractor.extract(props.responsesArray[i], {
                   language:"english",
                   remove_digits: true,
@@ -42,7 +33,6 @@ function Wordcloud(props){
                                     count: 1,
                               })
                         }
-                        
                   } else {
                         wordCloudData.push({
                               value: string,

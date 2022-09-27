@@ -2,11 +2,9 @@ import _ from 'lodash';
 import {React} from 'react';
 import TouchpointTable from './TouchpointTable';
 
+//Function ran to handle data, creating a new array specific for the data table.
 function TouchpointList(props){
-
       var arrayOfTemplates = props.touchpointTemplates;
-      //console.log('ArrayOfTemplates: ');
-      //console.log(arrayOfTemplates);
       var templateTableEnabledArray = [];
       for(let v in arrayOfTemplates){ 
             const ID = v;

@@ -6,7 +6,7 @@ import {React} from 'react';
 import { Link } from 'react-router-dom';
 import { uid } from 'uid';
 
-
+//Generates data table.
 var arrayOfTemplates = '';
 var view = false;
 var duplicate = false;
@@ -30,13 +30,13 @@ function TouchpointTable(props){
                   <strong > 
                         <span>
                               <Link to = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library/edit-touchpoint'>
-                                    <Button variant="contained" size="small" onClick = {()=>templateArrayHandler(params)}> VIEW </Button> 
+                                    <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick = {()=>templateArrayHandler(params)}> View </Button> 
                               </Link>
                         </span>
                         <span>   </span>
                         <span>
                               <Link to = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library/edit-touchpoint'>
-                                    <Button variant="contained" size="small" onClick = {()=>duplicateTemplateArrayHandler(params)}> DUPLICATE </Button> 
+                                    <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick = {()=>duplicateTemplateArrayHandler(params)}> Duplicate </Button> 
                               </Link>
                         </span>
                   </strong> ),
@@ -80,8 +80,8 @@ function TouchpointTable(props){
                   </ul>
                   <div>
                         <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library/create-new'>
-                              <Button variant="contained" size="large">
-                                    CREATE NEW
+                              <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large">
+                                    Create New
                               </Button>                                        
                         </Link>
               

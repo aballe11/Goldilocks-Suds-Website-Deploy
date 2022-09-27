@@ -39,19 +39,11 @@
 .actions button {
     font: inherit;
     cursor: pointer;
-    background-color: #0b3bac;
     color: white;
     padding: 0.5rem 1.5rem;
     margin: 0.5rem;
-    border: 1px solid #0b3bac;
     border-radius: 4px;
     font-weight: 500;
-}
-
-.actions button:hover,
-.actions button:active {
-    background-color: #1955e1;
-    border-color: #1955e1;
 }
 
 .h2 {

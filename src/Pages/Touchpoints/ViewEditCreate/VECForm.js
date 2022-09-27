@@ -11,21 +11,14 @@ import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
 import {set, ref, remove, onValue} from 'firebase/database';
 import _ from 'lodash';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
-
-function VECForm(props){
- 
-
-    /*useEffect(() => {
-        onValue(dbRef(db, `/TouchpointTemplateIDs` ), snapshot => {
-              const tpIDs = snapshot.val();
-              if(tpIDs !== null){
-                    setTouchpointIDs(tpIDs);
-              };
-        });    
-    }, []);*/
-  
-
+//Function ran if user is creating a new touchpoint template. Handles dropdown buttons to
+//select type of new touchpoint template being created, and runs the specific form file.
+//No preexisting information is being passed.
+function VECForm(props){ 
+    const [dropdownValue, setDropdownValue] = useState('');
     const [dropdown, setDropdown] = useState(false);
     const openCloseDropdown=()=>{
         setDropdown(!dropdown);
@@ -48,44 +41,45 @@ function VECForm(props){
         set(ref(db, 'TouchpointTemplatesIDs/'), StringIDs);
     }*/
 
-    const functionWithSwitch = (parameter) => {
-        switch(parameter){
-            case "R10":
+    const functionWithSwitch = (type) => {
+        switch(type){
+            case "10-Point Rating":
                 return <R10Form writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
-            case "R5":
+            case "5-Point Rating":
                 return <R5Form writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
-            case "FF":
+            case "Freeform Input":
                 return <FFForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
-            case "MC":
+            case "Multiple Choice":
                 return <MCForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
-            case "MCI":
+            case "Multiple Choice w/ Images":
                 return <MCIForm writeToDatabase = {PushFirebaseTP} /*writeToDatabaseIDs = {PushFirebaseTpIDs}*/ deleteFromDatabase = {DeleteFirebaseTP} />;
             default:
                 break;
         }
     }
 
+    const optionsArray = [{label:"10-Point Rating"}, {label:"5-Point Rating"}, {label:"Freeform Input"}, {label:"Multiple Choice"}, {label:"Multiple Choice w/ Images"}]
+
+    const handleDropdownChange = (event, newDropdownValue) => {
+        console.log(newDropdownValue);
+        setDropdownValue(newDropdownValue.label);
+        handleType(newDropdownValue.label)
+    }
+
     return (
         <div>
             <h1 className={classes.h1}>Create New Touchpoint</h1>
             <br/>
-            <Dropdown isOpen={dropdown} toggle={openCloseDropdown} >
-                <DropdownToggle caret className={classes.dropdownBtn}>
-                    Touchpoint Type
-                </DropdownToggle>
-
-                <DropdownMenu>
-                    <DropdownItem header>Select...</DropdownItem>
-                    <DropdownItem divider/>
-
-                    <DropdownItem  onClick={()=>handleType("R10")}  >10-Point Rating</DropdownItem>
-                    <DropdownItem  onClick={()=>handleType("R5")}   >5-Point Rating</DropdownItem>
-                    <DropdownItem  onClick={()=>handleType("FF")}   >Freeform Input</DropdownItem>
-                    <DropdownItem  onClick={()=>handleType("MC")}   >Multiple Choice</DropdownItem>
-                    <DropdownItem  onClick={()=>handleType("MCI")}  >Multiple Choice w/ Images</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-            <br></br>
+            <Autocomplete 
+                value={dropdownValue}
+                onChange={(event, newDropdownValue) => {handleDropdownChange(event, newDropdownValue)}}
+                disablePortal 
+                options={optionsArray}
+                id="templates-combo-box" 
+                sx={{ width: 300 }} 
+                renderInput={(params) => <TextField {...params} 
+                label="Select touchpoint type..." />}/>
+            <br/>
             {functionWithSwitch(type)}
         </div>
     ); 

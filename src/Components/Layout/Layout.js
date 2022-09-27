@@ -1,6 +1,7 @@
 import classes from './Layout.module.css';
 import MainNavigation from './MainNavigation';
 
+//Function handling layout of general menu.
 function Layout(props){
     return (
         <div>

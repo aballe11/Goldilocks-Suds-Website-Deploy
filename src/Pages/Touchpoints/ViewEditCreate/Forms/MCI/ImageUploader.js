@@ -5,7 +5,9 @@ import { uid } from 'uid';
 import classes from './ImageUploader.module.css';
 import TextField from '@mui/material/TextField';
 import _ from 'lodash';
+import {Button} from '@mui/material';
 
+//Creates modal to upload images for use in the touchpoint creation.
 function ImageUploader(props){
       
       const [uploadingState, setUploadingState] = useState(false);
@@ -55,30 +57,32 @@ function ImageUploader(props){
             new Promise(() => {
               setTimeout(() => props.toggle(), 2000)
             });
-
+      }
           
             //resolbe("Done!")
             //let result = await promise; // wait until the promise resolves (*)
           
             //alert(result); // "done!"
-      }
-
       
-
       return(
             <div>
                   <div className={classes.modal}>
                         <div onClick = {props.toggle} className = {classes.overlay}/>
                         <div className = {classes.modalContent}>
                               <h3>Select files to upload...</h3>
-                              <button  className = {classes.closeModal} onClick = {props.toggle}>Close</button>
+                              {/*<button  className = {classes.closeModal} onClick = {props.toggle}>Close</button>*/}
+                              <Button className = {classes.closeModal} sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={props.toggle}>
+                                    Close
+                              </Button>  
                               <br/>
                               <p className = {classes.boldFont}>Name new/exisiting folder or leave blank for general folder.</p>
                               <TextField id='outlined-basic' variant='outlined' inputRef={folderNameRef} fullWidth />
                               <br/>
                               <br/>
                               <input type="file" multiple onChange={handleChange} />
-                              <button  className = {classes.uploadImg} onClick = {uploadingState? null:handleUpload}>Upload Selected Images</button>
+                              <Button className = {classes.uploadImg} sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={uploadingState? null:handleUpload}>
+                                    Upload Selected Images
+                              </Button> 
                               {<p className = {successTxt? classes.boldFont:null}>{promptText}</p>}
                         </div>
                   </div>                  

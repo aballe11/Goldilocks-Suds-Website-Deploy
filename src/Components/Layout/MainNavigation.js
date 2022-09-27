@@ -3,6 +3,7 @@ import classes from './MainNavigation.module.css';
 import logo from '../Procter_&_Gamble_logo.svg';
 import {Button} from '@mui/material';
 
+//Function creates menu buttons and links them to their respective subpages.
 function MainNavigation(){
     return (
         <header className={classes.header}>

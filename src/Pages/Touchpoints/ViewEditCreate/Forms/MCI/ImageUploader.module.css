@@ -32,6 +32,7 @@ body.active-modal {
   .overlay {
       background: rgba(49,49,49,0.8);
   }
+  
   .modalContent {
       position: absolute;
       z-index: 1000;
@@ -50,16 +51,14 @@ body.active-modal {
   
   .closeModal {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px 7px;
+      top: -50px;
+      left: 79.5%;
   }
 
   .uploadImg {
-    position: relative; 
-    top: 0px;
-    left: 18px;
-    padding: 0px 0px;
+    position: absolute; 
+    top: 29px;
+    left: 0%;
   }
 
   .boldFont {

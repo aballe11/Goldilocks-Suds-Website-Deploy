@@ -6,6 +6,7 @@ import {React, useState} from 'react';
 import { Link } from 'react-router-dom';
 import VideoUploader from './VideoUploader';
 
+//Uses data to generate a data table, buttons to either edit a specific video or upload a new one.
 var selectedVideoID = '';
 function MediaTable(props){
       //1037
@@ -25,7 +26,7 @@ function MediaTable(props){
                   <strong>
                         <span>
                               <Link to = '/Goldilocks-Suds-Website-Deploy/media/edit-video'>
-                                    <Button variant="contained" size="small" onClick = {()=>viewVideoHandler(params)}> VIEW </Button> 
+                                    <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick = {()=>viewVideoHandler(params)}> View </Button> 
                               </Link>
 
                         </span>
@@ -66,8 +67,8 @@ function MediaTable(props){
                         </div>
                   </ul>
                   <div>
-                        <Button variant="contained" size="large" onClick={toggleVideoUploader}>
-                              ADD NEW
+                        <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={toggleVideoUploader}>
+                              Add New
                         </Button>                                        
                   </div>
                   {showVideoUploader?  returnModal():null}

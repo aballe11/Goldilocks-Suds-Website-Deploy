@@ -3,6 +3,8 @@ import TouchpointList from './TouchpointList';
 import {ref, onValue} from "firebase/database";
 import {db} from '../../Firebase';
 
+//Initial function ran to generate table with preexisting realtime database data of touchpoint templates.
+//This function gets the data from the realtime database and passes it to <TouchpointList/>
 function TouchpointLibrary(){
 
     const [isLoading, setIsLoading] = useState(true);
@@ -12,12 +14,9 @@ function TouchpointLibrary(){
         onValue(ref(db, '/TouchpointTemplates' ), snapshot => {;
             setLoadedTouchpointTemplates([]);
             const data = snapshot.val();
-            //console.log(data);
             if(data !== null){
                 setLoadedTouchpointTemplates(data);
                 setIsLoading(false);
-                //console.log(loadedTouchpointTemplates);
-           
             };
         });
     }, []);

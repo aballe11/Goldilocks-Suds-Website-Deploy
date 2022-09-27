@@ -4,11 +4,14 @@ import { ref as strgRef, getDownloadURL, uploadBytesResumable } from 'firebase/s
 import { set, onValue, ref as dbRef } from 'firebase/database';
 import { uid } from 'uid';
 import classes from './VideoUploader.module.css';
+import {Button} from '@mui/material';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import _ from 'lodash';
 import {getVideoDurationFromVideoFile} from '@rajesh896/video-thumbnails-generator';
 
+//Function ran when adding a new video, creating a modal in which user can input the new video information
+//and select the video and thumbnail files to upload to the firebase storage, also uploading the new data to the realtime database.
 function VideoUploader(props){
 
       const [uploadingState, setUploadingState] = useState(false);
@@ -66,9 +69,8 @@ function VideoUploader(props){
             //console.log(video);
             //console.log(thumbnail);
 
-            if(/*videoAliasRef !== "" && videoTitleRef !== "" && video !== null &&*/ thumbnail !== null) {
+            if(videoAliasRef !== "" && videoTitleRef !== "" && video !== null && thumbnail !== null) {
                   setUploadingState(true);
-                  
             
                   const videoUID = uid();
 
@@ -76,7 +78,7 @@ function VideoUploader(props){
                   var x = thumbnail.name;
                   x = _.split(x, '.');
                   x = x[0];
-                  const thumbnailRef = strgRef(storage, `Thumbnails/${x}_fd4f6be31d2`); //${videoUID}`);
+                  const thumbnailRef = strgRef(storage, `Thumbnails/${x}_${videoUID}`);
                   
                   const uploadTask = uploadBytesResumable(videoRef, video);
                   const uploadThumbnailTask = uploadBytesResumable(thumbnailRef, thumbnail);
@@ -90,7 +92,6 @@ function VideoUploader(props){
                         (err) => {console.log(err); setPromptText('Error. Check console for details.')},
                         () => {
                               getDownloadURL(uploadThumbnailTask.snapshot.ref).then((url) => {
-                                    //console.log('Thumbnail Download URL: ' + url);
                                     setThumbnailURL(url);
                               });
                         },
@@ -107,11 +108,6 @@ function VideoUploader(props){
                               setPromptText('Uploading video: ' + progress + '%');
                         },
                         (err) => {console.log(err); setPromptText('Error. Check console for details.')},
-                        //() => {
-                        //      generateVideoThumbnails(video, 2).then((thumbnailArray) => {
-                        //            setThumbnailImage(<img src = {thumbnailArray[1]} width="200px" height="200px" margin="10px" alt=""/>)
-                        //      });
-                        //},
                         () => {
                               getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                                     infoUpload(videoUID, url);
@@ -146,6 +142,7 @@ function VideoUploader(props){
             }
             const videoFeedbackData = {
                   Count: 0,
+                  Alias: videoAliasRef,
                   'Date_(D-M-Y)': `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`,
                   Active: false,
                   Title: videoTitleRef,
@@ -189,7 +186,9 @@ function VideoUploader(props){
                         <div onClick = {props.toggle} className = {classes.overlay}/>
                         <div className = {classes.modalContent}>
                               <h3>Video Uploader</h3>
-                              <button  className = {classes.closeModal} onClick = {props.toggle}>Close</button>
+                              <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} className = {classes.closeModal} variant="contained" size="medium" onClick={props.toggle}>
+                                    Close
+                              </Button>   
                               <br/>
                               <div>
                                     <label className = {classes.boldFont}>Video Alias:</label>
@@ -203,15 +202,6 @@ function VideoUploader(props){
                                     <input className = {classes.inputText} name="videoTitleInputID" type="text" id="videoTitleInputID"/>
                                     <br/>
                                     <br/>
-                                    
-                                    {/*<label className = {classes.boldFont}>Video Type:</label>
-                                    <br/>
-                                    <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleChange} value={alignment}>
-                                          <ToggleButton value="180" aria-label="180 aligned">180 Degrees</ToggleButton>
-                                          <ToggleButton value="360" aria-label="360 aligned">360 Degrees</ToggleButton>
-                                    </ToggleButtonGroup>
-                                    <br/>
-                                    <br/>*/}
                                     <label className = {classes.boldFont}>Video Dimensions:</label>
                                     <br/>
                                     <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleDimensionsChange} value={dimensionsAlignment}>
@@ -229,10 +219,12 @@ function VideoUploader(props){
                               <br/>
                               <br/>
                               <label className = {classes.boldFont}>Video Thumbnail File: &ensp;</label>
-                              <input type="file" onChange={(e) => {setThumbnail(e.target.files[0]); }} />
+                              <input type="file" onChange={(event) => {setThumbnail(event.target.files[0]); }} />
                               <br/>
-                              <button  className = {classes.uploadImg} onClick = {uploadingState? null:handleUpload}>Upload Selected Video</button>
-                              <br/>
+                              <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} className = {classes.uploadBtn} variant="contained" size="mediun" onClick={uploadingState? null:handleUpload}>
+                                    Upload Selected Video
+                              </Button>   
+                              
                               <br/>
                               {<p className = {successText? classes.boldFont:null}>{promptText}</p>}
                         </div>

@@ -3,7 +3,11 @@ import classes from './Form.module.css';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import {uid} from 'uid';
+import {Button} from '@mui/material';
 
+//Function ran to render the 10-point rating touchpoint type creation form, and on data input, to 
+//upload data to the realtime database and create a new touchpoint type. Or if already created, 
+//it populates the form with the preexisting data and with edit/delete functionality.
 function R10Form(props) {
 
     const touchpointAlias = useRef('');
@@ -38,7 +42,9 @@ function R10Form(props) {
     function deleteButtonHandler(){
         if(props.view){
             return (<Link to = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
-                <button onClick = {deleteTemplate}>Delete Template</button>
+                <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={deleteTemplate}>
+                    Delete Template
+                </Button>  
             </Link>);
         }
     }
@@ -92,10 +98,14 @@ function R10Form(props) {
 
                 <div className={classes.actions}>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
-                        <button onClick={SubmitHandler}>Save Template</button>
+                        <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={SubmitHandler}>
+                            Save Template
+                        </Button>  
                     </Link>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
-                        <button>Go Back</button>
+                        <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large">
+                            Go Back
+                        </Button>  
                     </Link>
                     {deleteButtonHandler()}
                 </div>

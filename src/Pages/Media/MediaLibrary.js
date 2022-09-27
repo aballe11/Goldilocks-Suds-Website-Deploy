@@ -3,6 +3,8 @@ import MediaList from './MediaList';
 import {ref, onValue} from "firebase/database";
 import {db} from '../Firebase';
 
+//First function inside Media subpage. Gets video information from realtime database to populate a future data table. 
+//Then renders <MediaList /> passing the information.
 function MediaLibrary(){
       const [isLoading, setIsLoading] = useState(true);
       const [loadedVideos, setLoadedVideos] = useState([]);
@@ -31,7 +33,9 @@ function MediaLibrary(){
 
       return (
             <section>
+                  <div>
                     <MediaList loadedVideos={loadedVideos}/>
+                    </div>
             </section>
       )
 

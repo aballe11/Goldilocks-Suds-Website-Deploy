@@ -5,9 +5,9 @@ import { listAll, ref, getDownloadURL } from 'firebase/storage';
 import './Gallery.css';
 import _ from 'lodash';
 
-
-//const selectedIDs = [];
+//Generates images gallery downloading all the data from the firebase storage.
 function Gallery(props){
+      console.log(props.chosenFile);
       const imageListRef = ref(storage, `Touchpoint Template Images/${props.chosenFile}`);
       const [imageList, setImageList] = useState([]);  
       const [idList, setIdList] = useState([]);

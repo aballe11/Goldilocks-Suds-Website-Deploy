@@ -1,11 +1,10 @@
-import FeedbackTable2 from './FeedbackTable2';
+import FeedbackTable from './FeedbackTable';
 import _ from 'lodash';
 
+//
 function FeedbackList(props){
-
     var idArray = props.IDs.split('/');
     var arrayOfVideos = (props.videosFeedack);
-
 
     const videoTableEnabledArray = [];
     for(const v of idArray){
@@ -13,7 +12,7 @@ function FeedbackList(props){
         const date = _.get(arrayOfVideos, [v, 'Date_(D-M-Y)']);
         const totalResponses = _.get(arrayOfVideos, [v, 'TotalResponses']);
         const status = (_.get(arrayOfVideos, [v, 'Active'])? 'Active':'Inactive');
-
+        const alias = _.get(arrayOfVideos, [v, 'Alias']);
 
         videoTableEnabledArray.push({
             'id': v,
@@ -23,17 +22,8 @@ function FeedbackList(props){
             'Status': status,
         })
     }
-    //console.log(videoTableEnabledArray);
-    //console.log(arrayOfVideos);
-
     return (    
-                /*<FeedbackTable 
-                    videoTableEnabledArray = {videoTableEnabledArray} 
-                    arrayOfVideos = {arrayOfVideos}
-                />*/
-                <FeedbackTable2 videoTableEnabledArray = {videoTableEnabledArray} arrayOfVideos = {arrayOfVideos} />
-
-
+        <FeedbackTable videoTableEnabledArray = {videoTableEnabledArray} arrayOfVideos = {arrayOfVideos} />
     );          
 }
 

@@ -1,5 +1,6 @@
 import classes from './Home.module.css';
 
+//Function ran in the start page, embedding Youtube video.
 function Home(){
         return(
             <div >

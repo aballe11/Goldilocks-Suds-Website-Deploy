@@ -13,6 +13,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+//Function that generates a Bar Chart image exportable as .pgn & .json
 function  BarChart(props){
       ChartJS.register(
             CategoryScale,
@@ -49,8 +50,17 @@ function  BarChart(props){
                   dataset.push(touchpointArray[i]);
             }
       }
-      labels.push(labels.shift());
-      dataset.push(dataset.shift());
+      if(type==="R10"){
+            labels.push(labels.shift());
+            dataset.push(dataset.shift());
+      } else if (type === "R5"){
+            const tempLbl = labels[0];
+            const tempNo = dataset[0];
+            labels[0] = labels[1];
+            dataset[0] = dataset[1];
+            labels[1] = tempLbl;
+            dataset[1] = tempNo;
+      }
 
 
       const options = {
@@ -61,7 +71,7 @@ function  BarChart(props){
               },
               title: {
                 display: true,
-                text: "Video: " + props.title + " | Touchpoint: " + alias + " | Time: " + time + " | Total Responses: " + total + " | ID: " + props.tpId,
+                text: "Video: " + props.alias + " | Touchpoint: " + alias + " | Time: " + time + " | Total Responses: " + total + " | ID: " + props.tpId,
                 font: {
                   size: 15,
                   weight: 'bold',
@@ -115,7 +125,7 @@ function  BarChart(props){
             ],
           };
 
-      function exportBarChart(){
+      function exportBarChartPng(){
             const link = document.createElement("a");
             link.download = props.tpId + "_Touchpoint_BarChart.png";
             link.href =  barchartRef.current.toBase64Image();
@@ -130,11 +140,11 @@ function  BarChart(props){
             <div>
                   <Bar ref={barchartRef} options = {options} data = {data} />
                   <br/>
-                  <Button variant="contained" size="small" onClick={exportBarChart}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={exportBarChartPng}>
                         Export Bar Chart
                   </Button>
                   &emsp;&emsp;
-                  <Button variant="contained" size="small" onClick={labelHandler}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={labelHandler}>
                         Toggle Labels
                   </Button>
             </div>

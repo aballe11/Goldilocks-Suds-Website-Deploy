@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {React} from 'react';
 import MediaTable from './MediaTable';
 
+//Handles data and creates new array used to create the data table rendering <MediaTable />
 function MediaList(props){
       var arrayOfVideos = props.loadedVideos;
       var videoTableEnabledArray = [];

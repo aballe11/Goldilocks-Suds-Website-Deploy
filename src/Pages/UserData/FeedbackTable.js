@@ -6,23 +6,20 @@ import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
 import PieChart from './Charts/PieChart';
 import BarChart from './Charts/BarChart';
 import Wordcloud from './Charts/Wordcloud';
-//import faker from 'faker';
 
-function FeedbackTable2(props) {
-      //###################################################################################### PREPARATION
-
+//Function handling data table changes going through the JSON information containing the user feedback gathered by the Unity App.
+function FeedbackTable(props) {
+      //######################### PREPARATION
       var arrayOfVideos = props.arrayOfVideos;
       var VideoTableEnabledArrayVideos = props.videoTableEnabledArray;    
-      
       VideoTableEnabledArrayVideos = _.sortBy(VideoTableEnabledArrayVideos, ['Date', 'Title', 'Status'], ['asc', 'desc', 'desc']);
 
       var arrayOfTouchpoints = [];
       var tpTotal = '';
       var chosenVideoTitle = '';
+      var chosenVideoAlias = '';
       var videoID = '';   
-      var touchpointID = '';
       var videoTableEnabledArrayTouchpoints = [];
-      var videoTableEnabledArrayTP = [];
   
       const [insideVideoTitle, setInsideVideoTitle] = useState('');
       const [exportButton, setExportButton] = useState('');
@@ -33,6 +30,7 @@ function FeedbackTable2(props) {
       const [chart2, setChart2] = useState("");
       const [chart3, setChart3] = useState("");
 
+      //Function to export table's information as a JSON.
       function exportAllTouchpoints(){
             const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
                 JSON.stringify(arrayOfTouchpoints)
@@ -44,7 +42,7 @@ function FeedbackTable2(props) {
               link.click();
       }    
 
-      //###################################################################################### 1ST STAGE
+      //######################### 1ST DATA TABLE - Videos
 
       const allVideosColumns: GridColDef[] = [
             { field: 'Title', headerName: 'Video Title', width: 300, headerAlign: 'center', align: 'center',},
@@ -52,12 +50,10 @@ function FeedbackTable2(props) {
             { field: 'Responses', headerName: 'Total Responses', width: 226, headerAlign: 'center', align: 'center', type: 'number',},
             { field: 'Status', headerName: 'Status', headerAlign: 'center', align: 'center', width: 150,},
             { field: 'btn', headerName: 'Actions', renderCell: (params) => (
-                    <strong > <Button variant="contained" size="small" onClick={()=>toVideoInformation(params)}> VIEW </Button> </strong> ),
+                    <strong > <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={()=>toVideoInformation(params)}> View </Button> </strong> ),
             width: 160, headerAlign: 'center', align: 'center', }, 
       ];
 
-      //var columnsArray = allVideosColumns;
-      //var rowsArray = VideoTableEnabledArrayVideos;
 
       const [dataGrid, setDataGrid] = useState(<DataGrid
             sx={{ border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
@@ -71,54 +67,44 @@ function FeedbackTable2(props) {
             rowsPerPageOptions={[20]}
       />); 
 
-      //###################################################################################### 2ND STAGE
+      //######################### 2ND DATA TABLE - Touchpoints inside a specific video
 
       const videoInformationColumns: GridColDef[] = [
             { field: 'id', headerName: 'ID', width: 125, headerAlign: 'center', align: 'center', },
             { field: 'Alias', headerName: 'Alias', width: 300, headerAlign: 'center', align: 'center', },
             { field: 'Type', headerName: 'Touchpoint Type', width: 275, headerAlign: 'center', align: 'center',},
             { field: 'Time', headerName: 'Time Shown', width: 150, headerAlign: 'center', align: 'center',},
-            { field: 'btn', headerName: 'Actions', renderCell: (params) => ( <strong> <Button variant="contained" size="small" 
-                onClick={()=>toTouchpointInformation(params)}> VIEW </Button> </strong> ),
+            { field: 'btn', headerName: 'Actions', renderCell: (params) => ( <strong> <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" 
+                onClick={()=>toTouchpointInformation(params)}> View </Button> </strong> ),
               width: 180, headerAlign: 'center', align: 'center', },         
          ];
 
       const toVideoInformation = (params) => {
-            //console.log("VideoTableEnabledArrayVideos: ");
-            //console.log(VideoTableEnabledArrayVideos);
-            //console.log("ArraOfVideos: ");
-            //console.log(arrayOfVideos);
-            //console.log("Params: ");
-            //console.log(params);
-
             videoID = params.id;
 
             setExportButton(
-                  <Button variant="contained" size="large" onClick={exportAllTouchpoints}>
-                        EXPORT ALL
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={exportAllTouchpoints}>
+                        Export All
                   </Button>
             );
             setGoBackButton(
-                  <Button variant="contained" size="large" onClick={backToAllVideos}>
-                        GO BACK
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={backToAllVideos}>
+                        Go Back
                   </Button>
             );
 
-            //const count = _.get(arrayOfVideos, [videoID, 'Count']);
-
+            //Handling of new data array for the new data table.
             tpTotal = _.get(arrayOfVideos, [videoID, 'TotalResponses']);
             setTouchpointTotal('Total Responses: ' + tpTotal);
-
+            chosenVideoAlias = _.get(arrayOfVideos, [videoID, 'Alias']);
             chosenVideoTitle = _.get(arrayOfVideos, [videoID, 'Title']);
             setInsideVideoTitle(chosenVideoTitle);
 
             arrayOfTouchpoints = [];
             videoTableEnabledArrayTouchpoints = [];
             arrayOfTouchpoints = _.get(arrayOfVideos, [videoID, 'Touchpoints']);
-            //console.log(arrayOfTouchpoints);
 
             for(let x in arrayOfTouchpoints){
-                  //console.log(x);
                   const alias = arrayOfTouchpoints[x].Alias;
                   const total = arrayOfTouchpoints[x].Total;
                   const time = new Date(arrayOfTouchpoints[x].Time * 1000).toISOString().slice(14, 19);
@@ -149,9 +135,6 @@ function FeedbackTable2(props) {
             }
             videoTableEnabledArrayTouchpoints = _.sortBy(videoTableEnabledArrayTouchpoints, ['Time', 'Type', 'Alias'], ['desc', 'asc', 'asc'])
 
-            //console.log("Array of Touchpoints: ");
-            //console.log(arrayOfTouchpoints);
-
             setDataGrid(<DataGrid
                   sx={{ border: 1, '& .MuiDataGrid-columnHeaders': { backgroundColor: 'rgba(49, 141, 247, 1)', color: 'rgba(255, 255, 255, 1)', fontSize: 16 },
                       '&.MuiDataGrid-toolbarContainer': { padding: 200 }, '.MuiDataGrid-sortIcon': { color: 'rgba(255, 255, 255, 1)', } }}
@@ -165,8 +148,8 @@ function FeedbackTable2(props) {
             />);
       }
 
-      //###################################################################################### 3RD STAGE
-      
+       // ######################### BACK TO 1ST DATA TABLE
+    
       const backToAllVideos = (params) => {
             setInsideVideoTitle('');
             setTouchpointTotal('');
@@ -187,16 +170,14 @@ function FeedbackTable2(props) {
               />); 
       }
 
-
+      // ######################### 3RD DATA TABLE - Inside specific touchpoint
 
       const toTouchpointInformation = (params) => { 
 
             let id = params.id;
-            //console.log(id);
             setExportButton('');
             setGoBackButton('');
             setDataGrid("");
-            //console.log(arrayOfTouchpoints);
             var touchpointArray = _.get(arrayOfTouchpoints, params.id);
 
             switch(touchpointArray.Type){
@@ -205,16 +186,15 @@ function FeedbackTable2(props) {
                 case "R5":
                 case "MCI":
 
-                    setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
+                    setOtherGoBackButton(<Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
                         Go Back
                     </Button>);
                     setGoBackButton('');
-                    setChart(<div><BarChart tpId = {id} touchpointArray = {touchpointArray} title={chosenVideoTitle} /> <br/></div>);
-                    setChart2(<div><PieChart tpId = {id} touchpointArray = {touchpointArray} title={chosenVideoTitle} /> <br/></div>);
+                    setChart(<div><BarChart tpId = {id} touchpointArray = {touchpointArray} alias={chosenVideoAlias} /> <br/></div>);
+                    setChart2(<div><PieChart tpId = {id} touchpointArray = {touchpointArray} alias={chosenVideoAlias} /> <br/></div>);
                     break;
                 case "FF":
-
-                    setOtherGoBackButton(<Button variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
+                    setOtherGoBackButton(<Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
                         Go Back
                     </Button>);
                      setGoBackButton('');
@@ -263,7 +243,7 @@ function FeedbackTable2(props) {
             }
       }
 
-      //###################################################################################### BACK TO 2ND STAGE
+      // ######################### BACK TO 2ND DATA BABLE
 
       const backToVideoInformation = (params) => {
             setChart("");
@@ -272,12 +252,12 @@ function FeedbackTable2(props) {
             setInsideVideoTitle(chosenVideoTitle);
             setOtherGoBackButton('');
             setExportButton(
-                  <Button variant="contained" size="large" onClick={exportAllTouchpoints}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={exportAllTouchpoints}>
                       Export All
                   </Button>
               );
               setGoBackButton(
-                  <Button variant="contained" size="large" onClick={backToAllVideos}>
+                  <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={backToAllVideos}>
                       Go Back
                   </Button>
               );
@@ -323,4 +303,4 @@ function FeedbackTable2(props) {
                 </ul>
             </div>
         );
-}export default FeedbackTable2;
+}export default FeedbackTable;

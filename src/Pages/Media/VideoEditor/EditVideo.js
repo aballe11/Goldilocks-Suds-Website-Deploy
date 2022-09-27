@@ -14,8 +14,12 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {uid} from 'uid';
 import { Link } from 'react-router-dom';
+import {Button} from '@mui/material';
 
-
+//Function ran when editing a preexisting video. Layout is separated into 3 columns.
+//1st column allows user to add a new or select and existing touchpoint inside the video.
+//2nd columns is a video player with the video.
+//3rd column displays the data of a preexisting selected touchpoint or displays functionality to create a new touchpoint.
 function EditVideo(){
 
       const [videoData, setVideoData] = useState({});
@@ -121,10 +125,7 @@ function EditVideo(){
                   label: tpTemplatesData[x].Alias, id: tpTemplatesData[x].UID, type: types[tpTemplatesData[x].Type],
             });
       }
-
-      //console.log(templateDropdownOptions);
-
-
+      
       const options = {
             autoplay: false,
             controls: true,
@@ -164,7 +165,6 @@ function EditVideo(){
       const [selectedTemplateID, setSelectedTemplateID] = useState(null);
 
       function deleteHandler(){
-            //console.log(touchpoint);
             remove(dbRef(db, `Videos/${selectedVideoID}/Touchpoints/${touchpoint}`));
             remove(dbRef(db, `Feedback/${selectedVideoID}/Touchpoints/${touchpoint}`));
             set(dbRef(db, `Feedback/${selectedVideoID}/Count`), touchpointCount-1);
@@ -185,6 +185,7 @@ function EditVideo(){
             set(dbRef(db, 'VideoIDs/'), vidIDs)
 
             deleteObject(srgRef(storage, `Videos/${storageName}` )).then(()=>{/*console.log('Video Delete successful!')*/}).catch((error)=>{console.log(error)});
+            console.log(thumbnailStorageName);
             deleteObject(srgRef(storage, `Thumbnails/${thumbnailStorageName}` )).then(()=>{/*console.log('Thumbnail Delete successful!')*/}).catch((error)=>{console.log(error)});
       }
 
@@ -197,7 +198,6 @@ function EditVideo(){
             var uploadString = currentTime + '/' + uploadValue;
             var newTpID = uid();
             set(dbRef(db, `Videos/${selectedVideoID}/Touchpoints/${newTpID}`), uploadString);
-            //console.log(tpTemplatesData);
             var feedbackDict = {};
             switch(tpTemplatesData[uploadValue].Type){
                   case 'MCI':
@@ -254,6 +254,7 @@ function EditVideo(){
       }
 
       const handleDropdownChange = (event, newDropdownValue) => {
+            console.log(newDropdownValue.label);
             setDropdownValue(newDropdownValue.label);
             setUploadValue(newDropdownValue.id)
             
@@ -286,25 +287,21 @@ function EditVideo(){
                         <br/>
                         <br/>
                         <br/>
+                        <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={addHandler}>
+                                    Create New
+                        </Button>   
+                        <br/>
+                        <br/>
                         <ToggleButtonGroup size = "small" color="primary" orientation="vertical" value={touchpoint} exclusive onChange={handleChange}>
                               {uniqueTemplateIDs.map((IDs) => {
-                                    //console.log(videoDataTouchpoints[IDs]);
                                     const data = _.split(videoData.Touchpoints[IDs], '/');
-                                    //console.log(data);
                                     var second = data[0];
                                     var id = data[1];
                                     count++;
                                     return(<ToggleButton key = {IDs} value = {IDs} onClick ={()=>{selectedTpID(id, second)}} aria-label="id">{count}: Second {second}</ToggleButton>)
-                                    //return(<ExistingTouchpoint second = {second} id = {id} idTemplate = {tpTemplatesData.id} count = {count}/>);
                                     
                               })}
                         </ToggleButtonGroup>
-                        <br/>
-                        <br/>
-                        <button className='btn' onClick={addHandler}>Create New</button>
-
-                        
-                              
                         </div>
 
                         <div className="column center">
@@ -318,14 +315,20 @@ function EditVideo(){
                                     <h5>&nbsp;Current state: {videoState? 'Active':'Inactive'}</h5> 
                                     
                                     &emsp;&emsp;&ensp;&nbsp;
-                                    <button className='btnState' onClick={stateHandler}>Set State</button>
+                                    <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={stateHandler}>
+                                          Set State
+                                    </Button>   
                                     &emsp;
                                     <Link to = '/Goldilocks-Suds-Website-Deploy/media'>
-                                          <button className='btnState' onClick={deleteVideoHandler}>Delete Video</button>
+                                          <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={deleteVideoHandler}>
+                                                Delete Video
+                                          </Button>   
                                     </Link>
                                     &emsp;
                                     <Link to = '/Goldilocks-Suds-Website-Deploy/media'>
-                                          <button className='btnState'>Go Back</button>
+                                          <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small">
+                                                Go Back
+                                          </Button>   
                                     </Link>
                               </div>
                              
@@ -337,6 +340,11 @@ function EditVideo(){
                               <br/>
                               {touchpointIsSelected? 
                                     <div>
+                                          <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={deleteHandler}>
+                                                Delete
+                                          </Button> 
+                                          <br/>
+                                          <br/>
                                           <h5>Name:</h5>
                                           <h6>{selectedTemplateName}</h6>
                                           <br/>
@@ -345,10 +353,6 @@ function EditVideo(){
                                           <br/>
                                           <h5>UID:</h5>
                                           <h6>{selectedTemplateID}</h6>
-                                          <br/>
-                                          <button className='btn' onClick={deleteHandler}>Delete Touchpoint</button>
-                                          <br/>
-                                          <br/>
                                     </div>
                               :null}
                               {createNewTouchpoint?   
@@ -359,7 +363,7 @@ function EditVideo(){
                                                 disablePortal 
                                                 options={templateDropdownOptions.sort((a, b) => b.type.localeCompare(a.type) )}
                                                 groupBy={(option) => option.type}
-                                                id="templates-combo-box" /*options={templateDropdownOptions}*/ 
+                                                id="templates-combo-box" 
                                                 sx={{ width: 300 }} 
                                                 renderInput={(params) => <TextField {...params} 
                                                 label="Template" />}/> 
@@ -367,12 +371,14 @@ function EditVideo(){
                                           <h5>Creation Time:</h5>
                                           <h6>Second {Math.floor(playerRef.current.currentTime())}</h6>
                                           
-                                          <button className='btnSmall' onClick={timeHandler}>Get Current Time</button>
+                                          <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={timeHandler}>
+                                                Get Time
+                                          </Button> 
                                           <br/>
                                           <br/>
-                                          <br/>
-
-                                          <button className='btn' onClick={saveHandler}>Save Touchpoint</button>
+                                          <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={saveHandler}>
+                                                Save New
+                                          </Button> 
                                     </div>
                               : null}
                         </div>

@@ -3,12 +3,13 @@ import {ref, onValue} from "firebase/database";
 import { useState, useEffect } from 'react';
 import {db} from '../Firebase';
 
+//Starter function for User Data subpages. //Prepares for and calls <FeedbackList/>
 function UserData() {
-
     const [isLoading, setIsLoading] = useState(true);
     const [IDs, setIDs] = useState('');
     const [loadedFeedbackCards, setLoadedFeedbackCards] = useState({});
 
+    //Gets string of available Video IDs from the realtime database.
     useEffect(()=> {
         onValue(ref(db, '/VideoIDs'), (snapshot) => {
             setIDs('');
@@ -21,6 +22,7 @@ function UserData() {
         });
     }, []);
     
+    //Gets json data of /Feedback in the realtime database.
     useEffect(() => {
         onValue(ref(db, '/Feedback' ), snapshot => {;
             setLoadedFeedbackCards([]);

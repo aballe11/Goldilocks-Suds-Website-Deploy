@@ -8,6 +8,9 @@ import FFForm from './Forms/FF-Form';
 import {db} from '../../Firebase';
 import {set, ref, remove, onValue} from 'firebase/database';
 
+
+//Function ran if user is editing an existing touchpoint template. Depending on template type, 
+//renders the specific template form file and passes necessary information to populate it.
 function ViewTouchpoint(){
 
       function PushFirebaseTP(touchpointValues){
