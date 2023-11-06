@@ -126,6 +126,7 @@ function FeedbackTable(props) {
                         default:
                             break; 
                   }
+
                   videoTableEnabledArrayTouchpoints.push({
                         'Alias': alias,
                         'Type': type,
@@ -179,6 +180,7 @@ function FeedbackTable(props) {
             setGoBackButton('');
             setDataGrid("");
             var touchpointArray = _.get(arrayOfTouchpoints, params.id);
+            //var touchpointDataArray = _.get(props.touchpointsData, params.id);
 
             switch(touchpointArray.Type){
                 case "R10":
@@ -190,8 +192,8 @@ function FeedbackTable(props) {
                         Go Back
                     </Button>);
                     setGoBackButton('');
-                    setChart(<div><BarChart tpId = {id} touchpointArray = {touchpointArray} alias={chosenVideoAlias} /> <br/></div>);
-                    setChart2(<div><PieChart tpId = {id} touchpointArray = {touchpointArray} alias={chosenVideoAlias} /> <br/></div>);
+                    setChart(<div><BarChart tpId={id} touchpointArray={touchpointArray} touchpointDataArray={props.touchpointsData} alias={chosenVideoAlias} /> <br/></div>);
+                    setChart2(<div><PieChart tpId={id} touchpointArray={touchpointArray} touchpointDataArray={props.touchpointsData} alias={chosenVideoAlias} /> <br/></div>);
                     break;
                 case "FF":
                     setOtherGoBackButton(<Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={()=>backToVideoInformation(params)}>
@@ -276,11 +278,9 @@ function FeedbackTable(props) {
               />);
       }
 
-
-
       return (
             <div className= {classes.div}>
-                <br/>
+              <br />
                 <h1 className= {classes.h1}> User Data - Videos </h1>
                 <h2 className= {classes.h2}> {insideVideoTitle}</h2>
                 <h2 className= {classes.h2}> {touchpointTotal}</h2>

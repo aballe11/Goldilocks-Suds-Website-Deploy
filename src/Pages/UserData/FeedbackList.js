@@ -22,9 +22,12 @@ function FeedbackList(props){
             'Status': status,
         })
     }
+    ///var x = _.get(touchpointsData, [Aaa, 'Title']);
+
     return (    
-        <FeedbackTable videoTableEnabledArray = {videoTableEnabledArray} arrayOfVideos = {arrayOfVideos} />
-    );          
+        <section>
+            <FeedbackTable videoTableEnabledArray={videoTableEnabledArray} arrayOfVideos={arrayOfVideos} touchpointsData={props.touchpointsData} />
+        </section>);          
 }
 
 export default FeedbackList;

@@ -201,7 +201,7 @@ function EditVideo(){
             var feedbackDict = {};
             switch(tpTemplatesData[uploadValue].Type){
                   case 'MCI':
-                        feedbackDict['Total'] = 0; feedbackDict ['Type'] = 'MCI'; feedbackDict['Alias'] = tpTemplatesData[uploadValue].Alias;
+                        feedbackDict['Total'] = 0; feedbackDict['Type'] = 'MCI'; feedbackDict['Alias'] = tpTemplatesData[uploadValue].Alias; feedbackDict['ID'] = uploadValue;
                         var images = _.split(tpTemplatesData[uploadValue].ImageNames, '/'); feedbackDict['Time'] = currentTime;
                         for(let x in images){
                               feedbackDict[images[x]] = 0;
@@ -211,25 +211,27 @@ function EditVideo(){
                   case 'MC':
                         feedbackDict = {
                               Option_1_1: 0, Option_2_2: 0, Option_3_3: 0, Option_4_4: 0, Total: 0, 
-                              Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
+                            Type: 'MC', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime, ID: uploadValue,
                         };
                         break;
                   case 'FF':
                         feedbackDict = {
-                              Responses: "", Total: 0, Type: 'FF', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
+                            Responses: "", Total: 0, Type: 'FF', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime, ID: uploadValue,
                         };
                         break;
                   case 'R10':
                         feedbackDict = {
                               Option_1_1: 0, Option_2_2: 0,Option_3_3: 0, Option_4_4: 0, Option_5_5: 0, Option_6_6: 0, Option_7_7: 0, Option_8_8: 0, 
-                              Option_9_9: 0, Option_10_10: 0, Total: 0, Type: 'R10', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
+                            Option_9_9: 0, Option_10_10: 0, Total: 0, Type: 'R10', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime, ID: uploadValue,
                         };
                         break;
                   case 'R5':
                         feedbackDict = {
                               'Option_-2_1': 0, 'Option_-1_2': 0, Option_0_3: 0, Option_1_4: 0,
-                              Option_2_5: 0, Total: 0, Type: 'R5', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime,
+                            Option_2_5: 0, Total: 0, Type: 'R5', Alias: tpTemplatesData[uploadValue].Alias, Time: currentTime, ID: uploadValue,
                         };
+                    break;
+                  default:
                         break;
             }
             set(dbRef(db, `Feedback/${selectedVideoID}/Count`), (touchpointCount+1));
@@ -254,7 +256,6 @@ function EditVideo(){
       }
 
       const handleDropdownChange = (event, newDropdownValue) => {
-            console.log(newDropdownValue.label);
             setDropdownValue(newDropdownValue.label);
             setUploadValue(newDropdownValue.id)
             

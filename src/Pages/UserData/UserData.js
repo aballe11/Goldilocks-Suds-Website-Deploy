@@ -8,6 +8,7 @@ function UserData() {
     const [isLoading, setIsLoading] = useState(true);
     const [IDs, setIDs] = useState('');
     const [loadedFeedbackCards, setLoadedFeedbackCards] = useState({});
+    const [touchpointsData, setTouchpointsData] = useState({});
 
     //Gets string of available Video IDs from the realtime database.
     useEffect(()=> {
@@ -18,7 +19,6 @@ function UserData() {
             if(UIDs !== null){
                 setIDs(UIDs);
             }
-
         });
     }, []);
     
@@ -30,9 +30,20 @@ function UserData() {
             //console.log(data);
             if(data !== null){
                 setLoadedFeedbackCards(data);
-                setIsLoading(false);
-           
             };
+        });
+    }, []);
+
+    //Gets json data of /Feedback in the realtime database.
+    useEffect(() => {
+        onValue(ref(db, '/TouchpointTemplates'), snapshot => {
+            setTouchpointsData([]);
+            const data = snapshot.val();
+            if (data !== null) {
+                setTouchpointsData(data);
+                setIsLoading(false);
+            };
+            
         });
     }, []);
 
@@ -45,11 +56,8 @@ function UserData() {
             </section>
         );
     }
-
     return (
-        <section>
-                <FeedbackList videosFeedack={loadedFeedbackCards} IDs = {IDs}/>
-        </section>
+            <FeedbackList videosFeedack={loadedFeedbackCards} IDs={IDs} touchpointsData={touchpointsData} />
     );
 }
 

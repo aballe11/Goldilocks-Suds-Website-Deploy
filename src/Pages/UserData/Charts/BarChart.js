@@ -26,42 +26,77 @@ function  BarChart(props){
           );
 
       var touchpointArray = props.touchpointArray;
+
       var labels = [];
       var dataset = [];
       const alias = touchpointArray.Alias;
       const total = touchpointArray.Total;
       const type = touchpointArray.Type;
-      const time = touchpointArray.Time;
-      const [labelsShowing, setLabelsShowing] = useState(true);
-      let barchartRef = useRef(null);
+    const time = touchpointArray.Time;
+    const id = touchpointArray.ID;
+    var touchpointDataArray = _.get(props.touchpointDataArray, id);
+    const [labelsShowing, setLabelsShowing] = useState(true);
+    let barchartRef = useRef(null);
 
-      touchpointArray = _.omit(touchpointArray, 'Alias', 'Total', 'Type', 'Time');
-
-
-      for(let i in touchpointArray){
-            if(type==="R10" || type==="R5") {
-                  var str = _.split(i, '_');
-                  str = _.slice(str, 0, 2);
-                  str = _.join(str, ' ');
-                  labels.push(str);
-                  dataset.push(touchpointArray[i]);
+    touchpointArray = _.omit(touchpointArray, 'Alias', 'Total', 'Type', 'Time', 'ID');
+    
+    for (let i in touchpointArray) { 
+        var str = "";
+        if (type === "R10") {
+            console.log('in here');
+            str = _.split(i, '_');
+            if (str[1] === "1") {
+                str = str[1] + ": " + touchpointDataArray.MinimumOption;
+            } else if (str[1] === "10") {
+                str = str[1] + ": " + touchpointDataArray.MaximumOption;
             } else {
-                  labels.push(i);
-                  dataset.push(touchpointArray[i]);
+                str = str[1];
             }
-      }
-      if(type==="R10"){
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else if (type === "R5") {
+            str = _.split(i, '_');
+            if (str[1] === "-2") {
+                str = str[1] + ": " + touchpointDataArray.LeftOption;
+            } else if (str[1] === "0") {
+                str = str[1] + ": " + touchpointDataArray.CenterOption;
+            } else if (str[1] === "2") {
+                str = str[1] + ": " + touchpointDataArray.RightOption;
+            } else {
+                str = str[1];
+            }
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else if (type === "MC") {
+            str = _.split(i, 'n');
+            if (str[1] === "1") {
+                str = str[1] + ": " + touchpointDataArray.Option1;
+            } else if (str[1] === "2") {
+                str = str[1] + ": " + touchpointDataArray.Option2;
+            } else if (str[1] === "3") {
+                str = str[1] + ": " + touchpointDataArray.Option3;
+            } else if (str[1] === "4") {
+                str = str[1] + ": " + touchpointDataArray.Option4;
+            }
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else {
+            labels.push(i);
+            dataset.push(touchpointArray[i]);
+        }
+    }
+
+    if(type==="R10"){
             labels.push(labels.shift());
             dataset.push(dataset.shift());
-      } else if (type === "R5"){
+    } else if (type === "R5"){
             const tempLbl = labels[0];
             const tempNo = dataset[0];
             labels[0] = labels[1];
             dataset[0] = dataset[1];
             labels[1] = tempLbl;
             dataset[1] = tempNo;
-      }
-
+    }
 
       const options = {
             responsive: true,
@@ -76,7 +111,15 @@ function  BarChart(props){
                   size: 15,
                   weight: 'bold',
                 }
-              },
+                },
+                subtitle: {
+                    display: true,
+                    text: touchpointDataArray.Prompt,
+                    font: {
+                        size: 13,
+                        weight: 'bold',
+                    }
+                },
               datalabels: {
                   labels: {
                         value: {
@@ -135,10 +178,10 @@ function  BarChart(props){
       function labelHandler(){
             setLabelsShowing(!labelsShowing);
       }
-
-      return(
-            <div>
-                  <Bar ref={barchartRef} options = {options} data = {data} />
+      //                  <h1>{touchpointDataArray.length}</h1>
+      return (
+          <div>
+              <Bar ref={barchartRef} options={options} data={data} />
                   <br/>
                   <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="small" onClick={exportBarChartPng}>
                         Export Bar Chart

@@ -21,24 +21,59 @@ function PieChart(props){
       const alias = touchpointArray.Alias;
       const total = touchpointArray.Total;
       const type = touchpointArray.Type;
-      const time = touchpointArray.Time;
+    const time = touchpointArray.Time;
+    const id = touchpointArray.ID;
+    var touchpointDataArray = _.get(props.touchpointDataArray, id);
       const [labelsShowing, setLabelsShowing] = useState(0);
       let piechartRef = useRef(null);
 
-      touchpointArray = _.omit(touchpointArray, 'Alias', 'Total', 'Type', 'Time');
-
-      for(let i in touchpointArray){
-            if(type==="R10" || type==="R5") {
-                  var str = _.split(i, '_');
-                  str = _.slice(str, 0, 2);
-                  str = _.join(str, ' ');
-                  labels.push(str);
-                  dataset.push(touchpointArray[i]);
+    touchpointArray = _.omit(touchpointArray, 'Alias', 'Total', 'Type', 'Time', 'ID');
+    for (let i in touchpointArray) {
+        var str = "";
+        if (type === "R10") {
+            console.log('in here');
+            str = _.split(i, '_');
+            if (str[1] === "1") {
+                str = str[1] + ": " + touchpointDataArray.MinimumOption;
+            } else if (str[1] === "10") {
+                str = str[1] + ": " + touchpointDataArray.MaximumOption;
             } else {
-                  labels.push(i);
-                  dataset.push(touchpointArray[i]);
+                str = str[1];
             }
-      }
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else if (type === "R5") {
+            str = _.split(i, '_');
+            if (str[1] === "-2") {
+                str = str[1] + ": " + touchpointDataArray.LeftOption;
+            } else if (str[1] === "0") {
+                str = str[1] + ": " + touchpointDataArray.CenterOption;
+            } else if (str[1] === "2") {
+                str = str[1] + ": " + touchpointDataArray.RightOption;
+            } else {
+                str = str[1];
+            }
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else if (type === "MC") {
+            str = _.split(i, 'n');
+            if (str[1] === "1") {
+                str = str[1] + ": " + touchpointDataArray.Option1;
+            } else if (str[1] === "2") {
+                str = str[1] + ": " + touchpointDataArray.Option2;
+            } else if (str[1] === "3") {
+                str = str[1] + ": " + touchpointDataArray.Option3;
+            } else if (str[1] === "4") {
+                str = str[1] + ": " + touchpointDataArray.Option4;
+            }
+            labels.push(str);
+            dataset.push(touchpointArray[i]);
+        } else {
+            labels.push(i);
+            dataset.push(touchpointArray[i]);
+        }
+    }
+
       if(type === "R10"){
             labels.push(labels.shift());
             dataset.push(dataset.shift());
@@ -64,7 +99,14 @@ function PieChart(props){
                   size: 15,
                   weight: 'bold',
                 }
-              },
+                }, subtitle: {
+                    display: true,
+                    text: touchpointDataArray.Prompt,
+                    font: {
+                        size: 13,
+                        weight: 'bold',
+                    }
+                },
               datalabels: {
                   labels: {
                         value: {
@@ -78,7 +120,7 @@ function PieChart(props){
                   },
                   formatter: function(value, context) {
 
-                        return ((labelsShowing==2)? "":((labelsShowing==1)? ((value==0)? "":(Math.round(value/total*10000)/100 + '%')):((type=="MCI")? ((value==0)? "":(Math.round(value/total*10000)/100 + '%')) : ((value==0)? "":(context.chart.data.labels[context.dataIndex] + "\n" + value + " / " + total + "  |  " + Math.round(value/total*10000)/100 + '%')))));
+                        return ((labelsShowing===2)? "":((labelsShowing===1)? ((value===0)? "":(Math.round(value/total*10000)/100 + '%')):((type=="MCI")? ((value==0)? "":(Math.round(value/total*10000)/100 + '%')) : ((value==0)? "":(context.chart.data.labels[context.dataIndex] + "\n" + value + " / " + total + "  |  " + Math.round(value/total*10000)/100 + '%')))));
                         }
                   }
             },
