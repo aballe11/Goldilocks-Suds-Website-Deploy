@@ -27,7 +27,8 @@ function VideoUploader(props){
       //const [downloadURL, setDownloadURL] = useState('');
 
       //const [alignment, setAlignment] = useState('180');
-      const [dimensionsAlignment, setDimensionsAlignment] = useState('5K');
+      const [dimensionsAlignment, setDimensionsAlignment] = useState('4K');
+      const [videoTypeAligmnent, setVideoTypeAligmnent] = useState('180');
       var videosAmt = 0;
       var videoIDs = '';
       
@@ -139,6 +140,7 @@ function VideoUploader(props){
                   ThumbnailStorageName: `${x}_${videoUID}`,
                   StorageName: `${video.name}_${videoUID}`,
                   Resolution: dimensionsAlignment,
+                  Type: videoTypeAligmnent,
             }
             const videoFeedbackData = {
                   Count: 0,
@@ -176,9 +178,12 @@ function VideoUploader(props){
       }
 
       const handleDimensionsChange = (event, newAlignment) => {
-            setDimensionsAlignment(newAlignment);
+             setDimensionsAlignment(newAlignment);
       };
-
+      
+      const handleTypeChange = (event, newAlignment) => {
+             setVideoTypeAligmnent(newAlignment);
+      };
 
       return(
             <div>
@@ -211,6 +216,13 @@ function VideoUploader(props){
                                           <ToggleButton value="2060p" aria-label="2060p aligned">2060p</ToggleButton>
                                           <ToggleButton value="4K" aria-label="4K aligned">4K</ToggleButton>
                                           <ToggleButton value="5K" aria-label="5K aligned">5K</ToggleButton>
+                                    </ToggleButtonGroup>
+                                    <br />
+                                    <label className={classes.boldFont}>Video Type:</label>
+                                    <br />
+                                    <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleTypeChange} value={videoTypeAligmnent}>
+                                          <ToggleButton value="180" aria-label="180° aligned">180 Deg</ToggleButton>
+                                          <ToggleButton value="360" aria-label="360° aligned">360 Deg</ToggleButton>
                                     </ToggleButtonGroup>
                               </div>
                               <br/>
