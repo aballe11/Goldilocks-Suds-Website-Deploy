@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/Goldilocks-Suds-Website-Deploy/static/css/main.3b301f2e.css",
-    "main.js": "/Goldilocks-Suds-Website-Deploy/static/js/main.d7626185.js",
+    "main.js": "/Goldilocks-Suds-Website-Deploy/static/js/main.d7d8a91e.js",
     "static/media/Procter_&_Gamble_logo.svg": "/Goldilocks-Suds-Website-Deploy/static/media/Procter_&_Gamble_logo.222ec4cd01b8a74a9338bee2a11f71b5.svg",
     "index.html": "/Goldilocks-Suds-Website-Deploy/index.html",
     "main.3b301f2e.css.map": "/Goldilocks-Suds-Website-Deploy/static/css/main.3b301f2e.css.map",
-    "main.d7626185.js.map": "/Goldilocks-Suds-Website-Deploy/static/js/main.d7626185.js.map"
+    "main.d7d8a91e.js.map": "/Goldilocks-Suds-Website-Deploy/static/js/main.d7d8a91e.js.map"
   },
   "entrypoints": [
     "static/css/main.3b301f2e.css",
-    "static/js/main.d7626185.js"
+    "static/js/main.d7d8a91e.js"
   ]
 }
