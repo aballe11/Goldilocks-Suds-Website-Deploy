@@ -23,21 +23,16 @@ function VideoUploader(props){
       const [successText, setSuccessText] = useState(false);
       const [VideosAmt, setVideosAmt] = useState(0);
       const [VideoIDs, setVideoIDs] = useState('');
-      const [thumbnailURL, setThumbnailURL] = useState('');
       //const [downloadURL, setDownloadURL] = useState('');
 
       //const [alignment, setAlignment] = useState('180');
       const [dimensionsAlignment, setDimensionsAlignment] = useState('4K');
       const [videoTypeAligmnent, setVideoTypeAligmnent] = useState('180');
-      var videosAmt = 0;
-      var videoIDs = '';
-      
-
-      const videoDataArray = [];
   
       var videoAliasRef = '';
       var videoTitleRef = '';
       var videoDuration = 0;
+      var videoUID = '';
 
       useEffect(() => {
             onValue(dbRef(db, `/VideoIDs` ), snapshot => {
@@ -65,64 +60,71 @@ function VideoUploader(props){
             e.preventDefault();
             videoAliasRef = document.getElementById("videoNameInputID").value;
             videoTitleRef = document.getElementById("videoTitleInputID").value;
-            //console.log(videoAliasRef);
-            //console.log(videoTitleRef);
-            //console.log(video);
-            //console.log(thumbnail);
 
             if(videoAliasRef !== "" && videoTitleRef !== "" && video !== null && thumbnail !== null) {
                   setUploadingState(true);
             
-                  const videoUID = uid();
+                  videoUID = uid();
 
-                  const videoRef = strgRef(storage, `Videos/${video.name}_${videoUID}`);
-                  var x = thumbnail.name;
-                  x = _.split(x, '.');
-                  x = x[0];
-                  const thumbnailRef = strgRef(storage, `Thumbnails/${x}_${videoUID}`);
-                  
-                  const uploadTask = uploadBytesResumable(videoRef, video);
-                  const uploadThumbnailTask = uploadBytesResumable(thumbnailRef, thumbnail);
+                  var videoName = video.name;
+                  videoName = _.split(videoName, '.');
+                  videoName = videoName[0];
+                  const videoRef = strgRef(storage, `Videos/${videoName}_${videoUID}`);
 
+                  var thumbnailName = thumbnail.name;
+                  thumbnailName = _.split(thumbnailName, '.');
+                  thumbnailName = thumbnailName[0];
+                  const thumbnailRef = strgRef(storage, `Thumbnails/${thumbnailName}_${videoUID}`);
                   getVideoDurationFromVideoFile(video).then((duration) => {
-                        videoDuration = duration;
+                      videoDuration = duration;
                   });
-
+                  
+                  const uploadThumbnailTask = uploadBytesResumable(thumbnailRef, thumbnail);
                   uploadThumbnailTask.on(
                         "state_changed",
-                        (err) => {console.log(err); setPromptText('Error. Check console for details.')},
-                        () => {
-                              getDownloadURL(uploadThumbnailTask.snapshot.ref).then((url) => {
-                                    setThumbnailURL(url);
-                              });
-                        },
-                  );
-                  
-                  uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
+                          (snapshot) => {
                               const progress = Math.round(
-                                    
-                                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                                  (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                               );
-                              
-                              setPromptText('Uploading video: ' + progress + '%');
-                        },
+                              setPromptText('Uploading thumbnail: ' + progress + '%');
+                          },
                         (err) => {console.log(err); setPromptText('Error. Check console for details.')},
                         () => {
-                              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                                    infoUpload(videoUID, url);
-                              });
-                              nextActions();
+                            getDownloadURL(uploadThumbnailTask.snapshot.ref).then((url) => {
+                                uploadVideo(videoUID, url, videoRef);
+                            });
+                            
                         },
                   );
+
+
             } else {
                   setPromptText('At least one input is missing.');
             }
       };
 
+    function uploadVideo(videoUID, thumbnailURL, videoRef) {
+        const uploadTask = uploadBytesResumable(videoRef, video);
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setPromptText('Uploading video: ' + progress + '%');
+            },
+            (err) => { console.log(err); setPromptText('Error. Check console for details.') },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    infoUpload(videoUID, url, thumbnailURL);
+                    
+                });
+                nextActions();
+            },
+        );
+    }
       
-      function infoUpload(videoUID, videoURL){
+      function infoUpload(videoUID, videoURL, thumbnailURL){
             const current = new Date();
             var x = thumbnail.name;
             x = _.split(x, '.');
@@ -150,21 +152,20 @@ function VideoUploader(props){
                   Title: videoTitleRef,
                   TotalResponses: 0,
                   Touchpoints: '',
-            }
-            
-            set(dbRef(db, 'Videos/' + videoUID ), videoData);
-            set(dbRef(db, 'Feedback/' + videoUID ), videoFeedbackData);
-            set(dbRef(db, 'VideosAmt/'), VideosAmt + 1);
+          }
 
-            var x = _.split(VideoIDs, '/');
-            x.push(videoUID);
-            var vidIDs = _.join(x, '/');
-            set(dbRef(db, 'VideoIDs/'), vidIDs);
-            
-           
+              if (videoUID !== null || videoUID !== "") {
+                set(dbRef(db, 'Videos/' + videoUID ), videoData);
+                set(dbRef(db, 'Feedback/' + videoUID ), videoFeedbackData);
+                set(dbRef(db, 'VideosAmt/'), VideosAmt + 1);
+                var y = _.split(VideoIDs, '/');
+                y.push(videoUID);
+                var vidIDs = _.join(y, '/');
+                set(dbRef(db, 'VideoIDs/'), vidIDs);
+              }
       }
 
-      function nextActions(){
+    function nextActions() {
             setUploadingState(false);
             setSuccessText(true);
             setPromptText('Video successfully uploaded!')
@@ -218,7 +219,7 @@ function VideoUploader(props){
                                           <ToggleButton value="5K" aria-label="5K aligned">5K</ToggleButton>
                                           <ToggleButton value="3840p" aria-label="5K aligned">3840p (360 Vids)</ToggleButton>
                                     </ToggleButtonGroup>
-                                    <br />
+                          <br /><br />
                                     <label className={classes.boldFont}>Video Type:</label>
                                     <br />
                                     <ToggleButtonGroup color="primary" exclusive aria-label="text alignment" onChange={handleTypeChange} value={videoTypeAligmnent}>

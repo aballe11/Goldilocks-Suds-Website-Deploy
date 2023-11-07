@@ -15,8 +15,8 @@ function MediaLibrary(){
                   const data = snapshot.val();
                   if(data !== null){
                         setLoadedVideos(data);
-                        setIsLoading(false);
                   };
+                  setIsLoading(false);
             });    
       }, []);
  

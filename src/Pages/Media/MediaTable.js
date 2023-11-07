@@ -1,5 +1,4 @@
 import { DataGrid, GridToolbar, GridColDef} from '@mui/x-data-grid';
-import _ from 'lodash';
 import classes from './MediaTable.module.css';
 import {Button} from '@mui/material';
 import {React, useState} from 'react';
@@ -57,13 +56,12 @@ function MediaTable(props){
             return ( <VideoUploader toggle={toggleVideoUploader}/>);
         }
         
-
       return(
             <div>
                   <h1 className= {classes.h1}>Videos</h1>
                   <ul className = {classes.list}>
                         <div className = {classes.lowerDiv} >
-                              {dataGrid}
+                            {(arrayOfVideos.length < 1)? null:dataGrid}
                         </div>
                   </ul>
                   <div>
