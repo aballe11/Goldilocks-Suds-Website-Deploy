@@ -216,6 +216,7 @@ function VideoUploader(props){
                                           <ToggleButton value="2060p" aria-label="2060p aligned">2060p</ToggleButton>
                                           <ToggleButton value="4K" aria-label="4K aligned">4K</ToggleButton>
                                           <ToggleButton value="5K" aria-label="5K aligned">5K</ToggleButton>
+                                          <ToggleButton value="3840p" aria-label="5K aligned">3840p (360 Vids)</ToggleButton>
                                     </ToggleButtonGroup>
                                     <br />
                                     <label className={classes.boldFont}>Video Type:</label>
