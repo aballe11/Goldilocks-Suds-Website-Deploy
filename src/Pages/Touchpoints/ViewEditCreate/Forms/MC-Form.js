@@ -113,9 +113,11 @@ function MCForm(props) {
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointOption4} defaultValue={option4DefaultValue} fullWidth />
                 </div>
                 <div className={classes.actions}>
-                    <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={SubmitHandler}>
-                        Save Template
-                    </Button>   
+                    <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
+                        <Button sx={{ textTransform: 'none', '&:hover': { backgroundColor: '#000b9e', borderColor: '#000b9e' } }} variant="contained" size="large" onClick={SubmitHandler}>
+                            Save Template
+                        </Button>   
+                    </Link>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
                         <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large">
                             Go Back 

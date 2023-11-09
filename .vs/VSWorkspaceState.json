@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\Components",
-    "\\src\\Components\\Layout",
     "\\src\\Pages",
     "\\src\\Pages\\Media",
     "\\src\\Pages\\Media\\VideoEditor",
+    "\\src\\Pages\\Touchpoints",
+    "\\src\\Pages\\Touchpoints\\ViewEditCreate",
+    "\\src\\Pages\\Touchpoints\\ViewEditCreate\\Forms",
     "\\src\\Pages\\UserData",
     "\\src\\Pages\\UserData\\Charts"
   ],
-  "SelectedNode": "\\src\\Pages\\Media\\VideoUploader.js",
+  "SelectedNode": "\\src\\Pages\\Touchpoints\\ViewEditCreate\\Forms\\FF-Form.js",
   "PreviewInSolutionExplorer": false
 }
