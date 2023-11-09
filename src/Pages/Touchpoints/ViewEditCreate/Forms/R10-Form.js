@@ -67,7 +67,7 @@ function R10Form(props) {
             TimesUsed: ((props.duplicate) ? 0 : ((props.view) ? props.arrayOfTemplates.TimesUsed:0)),
         };
         props.writeToDatabase(touchpointValues);
-        window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
+        //window.location.href = '/Goldilocks-Suds-Website-Deploy/touchpoint-template-library';
     }
 
     return (
@@ -97,9 +97,11 @@ function R10Form(props) {
                 </div>
 
                 <div className={classes.actions}>
-                        <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={SubmitHandler}>
+                    <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
+                        <Button sx={{ textTransform: 'none', '&:hover': { backgroundColor: '#000b9e', borderColor: '#000b9e' } }} variant="contained" size="large" onClick={SubmitHandler}>
                             Save Template
                         </Button> 
+                    </Link>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
                         <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large">
                             Go Back

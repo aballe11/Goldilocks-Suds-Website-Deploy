@@ -109,9 +109,11 @@ function R5Form(props) {
                     <TextField id='outlined-basic' variant='outlined' inputRef={touchpointRightOption} defaultValue={rightOptionDefaultValue} fullWidth />
                 </div>
                 <div className={classes.actions}>
+                    <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
                         <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large" onClick={SubmitHandler}>
                             Save Template
                         </Button>  
+                    </Link>
                     <Link to='/Goldilocks-Suds-Website-Deploy/touchpoint-template-library'>
                         <Button sx={{textTransform:'none', '&:hover':{backgroundColor: '#000b9e', borderColor:'#000b9e'}}} variant="contained" size="large">
                             Go Back
